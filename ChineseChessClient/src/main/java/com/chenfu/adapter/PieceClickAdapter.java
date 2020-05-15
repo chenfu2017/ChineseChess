@@ -1,9 +1,6 @@
 package com.chenfu.adapter;
 
-import com.chenfu.AudioPlayer;
-import com.chenfu.ChessBoard;
-import com.chenfu.ChessPiece;
-import com.chenfu.DefultSet;
+import com.chenfu.*;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -13,43 +10,64 @@ import java.awt.event.MouseEvent;
 
 public class PieceClickAdapter extends MouseAdapter {
 
-    private boolean selected = false;
+    private boolean selected;
     private ChessBoard chessBoard;
+    private ChessFrame chessFrame;
 
-    public PieceClickAdapter(ChessBoard chessBoard) {
+    public PieceClickAdapter(ChessBoard chessBoard, ChessFrame chessFrame) {
         this.chessBoard = chessBoard;
+        this.chessFrame = chessFrame;
+    }
+
+    private boolean chooseOwnPiece(int id){
+        return (id & 8) != 0 && chessBoard.step % 2 == 0 || (id & 16) != 0 && chessBoard.step % 2 == 1;
+    }
+
+    private void goChess(Point srcpoint, Point despoint) {
+        chessBoard.chessPieces[despoint.y][despoint.x] = chessBoard.chessPieces[srcpoint.y][srcpoint.x];
+        chessBoard.chessPieces[srcpoint.y][srcpoint.x] = null;
+        chessBoard.setPoint(despoint);
+        selected = false;
+        chessBoard.step++;
+        chessFrame.getStepTimer().reStart();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        Point srcpoint = chessBoard.getPoint();
         AudioPlayer audioPlayer = new AudioPlayer("go.wav",false);
         int x, y;
         x = e.getX();
         y = e.getY();
-        x = (x - DefultSet.ChessBoarderX) / DefultSet.chessBoarderP;
-        y = (y - DefultSet.ChessBoarderY) / DefultSet.chessBoarderP;
+        x = (x - DefultSet.chessBoarderX) / DefultSet.chessBoarderP;
+        y = (y - DefultSet.chessBoarderY) / DefultSet.chessBoarderP;
         if (x < 0 || x > 8 || y < 0 || y > 9) {
             return;
         }
-        if (!selected) {
-            ChessPiece chessPiece = chessBoard.chessPieces[y][x];
-            if (chessPiece != null) {
-                int id = chessPiece.getId();
-                if ((id & 8) != 0 && chessBoard.step % 2 == 0 || (id & 16) != 0 && chessBoard.step % 2 == 1) {
-                    chessBoard.setPoint(new Point(x, y));
-                    selected = true;
+//        System.out.println(x+","+y);
+        ChessPiece chessPiece = chessBoard.chessPieces[y][x];
+        Point despoint= new Point(x,y);
+        if(chessPiece !=null){
+            int id = chessPiece.getId();
+            if (chooseOwnPiece(id)) {
+//                System.out.println("选中自己的子:"+id);
+                if (srcpoint == null) {
+                    chessBoard.setPoint(new Point(x,y));
+                }else {
+                    chessBoard.getPoint().x = x;
+                    chessBoard.getPoint().y = y;
+                }
+                selected = true;
+            }else {
+                if(selected && !chooseOwnPiece(id) && chessBoard.eatPiece(srcpoint,despoint)){
+                    goChess(srcpoint,despoint);
+                    audioPlayer.play();
                 }
             }
-        } else {
-            Point src = chessBoard.getPoint();
-            Point des = new Point(x, y);
-            if (chessBoard.eatPiece(src, des)) {
-                chessBoard.chessPieces[des.y][des.x] = chessBoard.chessPieces[src.y][src.x];
-                chessBoard.chessPieces[src.y][src.x] = null;
-                chessBoard.setPoint(des);
+        }else {
+            if (selected && chessBoard.move(srcpoint,despoint)) {
+                goChess(srcpoint,despoint);
                 audioPlayer.play();
-                selected = false;
-                chessBoard.step++;
             }
         }
         chessBoard.repaint();

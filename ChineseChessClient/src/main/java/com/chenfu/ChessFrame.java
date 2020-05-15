@@ -1,8 +1,12 @@
 package com.chenfu;
 
 import com.chenfu.adapter.ExitAdapter;
+import com.chenfu.adapter.LoginAdapter;
 import com.chenfu.adapter.MusicControlAdapter;
 import com.chenfu.adapter.PieceClickAdapter;
+import com.chenfu.timer.StepTimer;
+import com.chenfu.timer.TotalTimer;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -18,6 +22,8 @@ public class ChessFrame extends JFrame {
     private static InformationBoard InfBoard;
     private static ChessBoard chessBoard;
     private AudioPlayer audioPlayer;
+    private StepTimer stepTimer;
+    private TotalTimer totalTimer;
 
 
     public ChessFrame() {
@@ -42,20 +48,19 @@ public class ChessFrame extends JFrame {
         this.setContentPane(contentPanel);
 
         //添加背景图片
-        JLabel BackGround = new JLabel("");
-//        BackGround.setIcon(Utils.getImageIcon("background.png"));
-        BackGround.setIcon(Utils.getImageIcon("bg.jpg"));
-        BackGround.setBounds(0, 0, 1366, 768);
+        JLabel backGround = new JLabel("");
+        backGround.setIcon(Utils.getImageIcon("bg.jpg"));
+        backGround.setBounds(0, 0, 1366, 768);
         //添加背景图片的关键语句
-        this.getLayeredPane().add(BackGround, new Integer(Integer.MIN_VALUE));
+        this.getLayeredPane().add(backGround, new Integer(Integer.MIN_VALUE));
 
-        //添加作者信息
-        JLabel AuthorInf = new JLabel("");
-        AuthorInf.setIcon(Utils.getImageIcon("background.png"));
-        //设置作者信息位置
-        ImageIcon imageIcon = Utils.getImageIcon("information.png");
-        AuthorInf.setBounds(10, 500, imageIcon.getIconWidth(), imageIcon.getIconHeight());
-        contentPanel.add(AuthorInf);
+//        //添加作者信息
+//        JLabel authorInf = new JLabel("");
+//        authorInf.setIcon(Utils.getImageIcon("background.png"));
+//        //设置作者信息位置
+//        ImageIcon imageIcon = Utils.getImageIcon("information.png");
+//        authorInf.setBounds(10, 500, imageIcon.getIconWidth(), imageIcon.getIconHeight());
+//        contentPanel.add(authorInf);
 
 
         //添加菜单
@@ -66,6 +71,7 @@ public class ChessFrame extends JFrame {
         menu1.setFont(font);
         menu1.setForeground(color);
         menu1.setBounds(DefultSet.menuX, DefultSet.menuY, DefultSet.menuWidth, DefultSet.menuHeight);
+        menu1.addMouseListener(new LoginAdapter(this,menu1));
         contentPanel.add(menu1);
 
         JLabel menu2 = new JLabel("人机对战");
@@ -105,47 +111,46 @@ public class ChessFrame extends JFrame {
         panel1.setOpaque(false);
         panel1.setVisible(true);
         panel1.setLayout(null);
-        panel2.setBounds(0, 0, 1366, 768);
-        panel2.setOpaque(false);
-        panel2.setVisible(false);
-        panel2.setLayout(null);
-        panel3.setBounds(0, 0, 1366, 768);
-        panel3.setOpaque(false);
-        panel3.setVisible(false);
-        panel3.setLayout(null);
-        panel4.setBounds(0, 0, 1366, 768);
-        panel4.setOpaque(false);
-        panel4.setVisible(false);
-        panel4.setLayout(null);
 
         //把4个Pane添加进ContentPanel
         contentPanel.add(panel1);
-        contentPanel.add(panel2);
-        contentPanel.add(panel3);
-        contentPanel.add(panel4);
 
         //对Pane1添加Canvas来绘制棋盘
         chessBoard = new ChessBoard();
         //设置Canvas位置和大小
-        chessBoard.setBounds(DefultSet.CanvasPosX, DefultSet.CanvasPosY, 504, 571);
-        chessBoard.addMouseListener(new PieceClickAdapter(chessBoard));
+        chessBoard.setBounds(DefultSet.canvasPosX, DefultSet.canvasPosY, 504, 571);
+        chessBoard.addMouseListener(new PieceClickAdapter(chessBoard,this));
         panel1.add(chessBoard);
 
         //对Pane1添加信息栏
         InfBoard = new InformationBoard();
-        InfBoard.setBounds(1020, 50, 328, 481);
+        InfBoard.setBounds(DefultSet.infBoardX,DefultSet.infBoardY,DefultSet.infBoardWidth,DefultSet.infBoardHeight);
         panel1.add(InfBoard);
 
         //添加时间标签
-        JLabel TimerLabel = new JLabel();
-        TimerLabel.setBounds(1030, 570, 100, 50);
-        TimerLabel.setFont(new Font("华文行楷", Font.CENTER_BASELINE, 28));
-        panel1.add(TimerLabel);
-        TimerThread MyTimerThread = new TimerThread(TimerLabel);
-        MyTimerThread.start();
+        JLabel totaltimerLabel = new JLabel();
+        totaltimerLabel.setBounds(DefultSet.timerLabelX,DefultSet.timerLabelY,DefultSet.timerLabelWidth,DefultSet.timerLabelHeight);
+        totaltimerLabel.setFont(new Font("华文行楷", Font.CENTER_BASELINE, 28));
+        totaltimerLabel.setForeground(Color.RED);
+        panel1.add(totaltimerLabel);
+        totalTimer = new TotalTimer(totaltimerLabel);
+        totalTimer.start();
+
+        JLabel timerLabel = new JLabel();
+        timerLabel.setBounds(DefultSet.timerLabelX,DefultSet.timerLabelY+DefultSet.timerLabelP,DefultSet.timerLabelWidth,DefultSet.timerLabelHeight);
+        timerLabel.setFont(new Font("华文行楷", Font.CENTER_BASELINE, 28));
+        timerLabel.setForeground(Color.RED);
+        panel1.add(timerLabel);
+        stepTimer = new StepTimer(timerLabel);
+        stepTimer.start();
+
+
 
         InfBoard.AddLog("红方执子");
         audioPlayer.play();
     }
 
+    public StepTimer getStepTimer() {
+        return stepTimer;
+    }
 }

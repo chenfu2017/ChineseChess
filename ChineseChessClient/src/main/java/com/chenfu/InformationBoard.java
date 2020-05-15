@@ -27,11 +27,11 @@ public class InformationBoard extends JPanel {
 
     public void paintComponent(Graphics g) {
         //定义一个空的图片流
-        BufferedImage BImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bufferedImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
         //获取图片流的Graphics
-        Graphics2D graphics = BImage.createGraphics();
-//        //绘制背景图片
-//        graphics.drawImage(Utils.getImage("InfBoard.png"), 0, 0,this);
+        Graphics2D graphics = bufferedImage.createGraphics();
+        //绘制背景图片
+        graphics.drawImage(Utils.getImage("information.png"), 0, 0,this);
         //设置字体颜色
         graphics.setColor(Color.white);
         //设置字体
@@ -43,7 +43,7 @@ public class InformationBoard extends JPanel {
             graphics.drawString(logS[i], 100, 60 + i * 40);
         }
         //刷新图片流至g
-        g.drawImage(BImage, 0, 0, null);
+        g.drawImage(bufferedImage, 0, 0, null);
     }
 
     public String AddLog(String s) {

@@ -8,12 +8,12 @@ public class ChessBoard extends JPanel {
     private static final int ROW = 10;
     private static final int COL = 9;
     public int step = 0;
-    int xx = DefultSet.ChessBoarderX;
-    int yy = DefultSet.ChessBoarderY;
+    int xx = DefultSet.chessBoarderX;
+    int yy = DefultSet.chessBoarderY;
     int pp = DefultSet.chessBoarderP;
     public ChessPiece[][] chessPieces;
     private Point point;
-    private Image imageKuang;
+    private final Image imageKuang;
 
     public ChessBoard() {
 
@@ -292,8 +292,12 @@ public class ChessBoard extends JPanel {
     }
 
     public boolean eatPiece(Point src, Point des) {
-        ChessPiece chessPiece = chessPieces[src.y][src.x];
-        int id = chessPiece.getId();
+        ChessPiece srcPiece = chessPieces[src.y][src.x];
+        ChessPiece desPiece = chessPieces[des.y][des.x];
+        int id = srcPiece.getId();
+        if((srcPiece.getId()&8) == (desPiece.getId()&8)||(srcPiece.getId()&16) == (desPiece.getId()&16) ){
+            return false;
+        }
         switch (id) {
             case 13:
             case 21:

@@ -1,57 +1,37 @@
 package com.chenfu;
+import javax.media.bean.playerbean.MediaPlayer;
 
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-
-import java.io.*;
-
-public class AudioPlayer extends Thread {
-    private Player player;
-    private String filename;
-    private boolean repeat = false;
-
-    public boolean isRepeat() {
-        return repeat;
+public class AudioPlayer {
+    private MediaPlayer mediaPlayer;
+    private String musicUrl;
+    
+    public static void main(String[] args){
+        String musicUrl = Utils.getMusicUrl("bgm.wav");
+        AudioPlayer audioPlayer = new AudioPlayer(musicUrl,true);
+    	audioPlayer.play();
     }
 
-    public void setRepeat(boolean repeat) {
-        this.repeat = repeat;
+    public AudioPlayer(String filename, boolean IsLoop){
+        musicUrl = Utils.getMusicUrl(filename);
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setMediaLocation("file:"+musicUrl);
+        mediaPlayer.realize();
+        mediaPlayer.setPlaybackLoop(IsLoop);
     }
-
-    public AudioPlayer(String filename, boolean repeat) {
-        this.filename = filename;
-        this.repeat = repeat;
-    }
-
-    public AudioPlayer(String filename) {
-        this.filename = filename;
-    }
-
-
-    //重写run方法
-    @Override
-    public void run() {
-        try {
-            do {
-                play();
-            } while (player.isComplete() && repeat);
-        } catch (Exception e) {
+   
+    public void play(){
+        try{
+	        mediaPlayer.start();
+            System.out.println("start:" + musicUrl);
+        }
+        catch(Exception e){
             e.printStackTrace();
         }
     }
-
-    //播放方法
-    public void play() {
-        InputStream audioInputStream = Utils.getAudioInputStream(filename);
-        try {
-            player = new Player(audioInputStream);
-            player.play();
-        } catch (JavaLayerException e) {
-            e.printStackTrace();
-        }
+   
+    public void stop(){
+        mediaPlayer.stop();
+        System.out.println("stop:" + musicUrl);
     }
 
-    public void close() {
-        player.close();
-    }
 }

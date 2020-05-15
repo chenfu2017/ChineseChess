@@ -8,9 +8,9 @@ public class ChessBoard extends JPanel {
     private static final int ROW = 10;
     private static final int COL = 9;
     public int step = 0;
-    int xx = DefultSet.ChessBoarderXX;
-    int yy = DefultSet.ChessBoarderYY;
-    int pp = DefultSet.ChessBoarderPP;
+    int xx = DefultSet.ChessBoarderX;
+    int yy = DefultSet.ChessBoarderY;
+    int pp = DefultSet.chessBoarderP;
     public ChessPiece[][] chessPieces;
     private Point point;
     private Image imageKuang;

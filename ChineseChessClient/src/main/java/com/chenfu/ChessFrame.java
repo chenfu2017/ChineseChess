@@ -1,5 +1,8 @@
 package com.chenfu;
 
+import com.chenfu.adapter.ExitAdapter;
+import com.chenfu.adapter.MusicControlAdapter;
+import com.chenfu.adapter.PieceClickAdapter;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -14,9 +17,12 @@ public class ChessFrame extends JFrame {
 
     private static InformationBoard InfBoard;
     private static ChessBoard chessBoard;
+    private AudioPlayer audioPlayer;
+
 
     public ChessFrame() {
-
+        //设置背景音乐
+        audioPlayer = new AudioPlayer("bgm.wav", true);
         //设置界面属性
         this.setTitle("chinese chess");
         //设置窗口大小
@@ -51,22 +57,42 @@ public class ChessFrame extends JFrame {
         AuthorInf.setBounds(10, 500, imageIcon.getIconWidth(), imageIcon.getIconHeight());
         contentPanel.add(AuthorInf);
 
-        //添加4个按钮
-        Color color = Color.BLUE;
-        JLabel menu1 = new JLabel("人机对战");
+
+        //添加菜单
+
         Font font = new Font("宋体", Font.BOLD, 40);
+        Color color = Color.BLUE;
+        JLabel menu1 = new JLabel("用户登录");
         menu1.setFont(font);
         menu1.setForeground(color);
-        menu1.setBounds(180, 60, 200, 60);
+        menu1.setBounds(DefultSet.menuX, DefultSet.menuY, DefultSet.menuWidth, DefultSet.menuHeight);
         contentPanel.add(menu1);
 
-        JLabel menu2 = new JLabel("网络对战");
+        JLabel menu2 = new JLabel("人机对战");
         menu2.setFont(font);
         menu2.setForeground(color);
-        menu2.setBounds(180, 120, 200, 60);
-        //添加按钮至ContentPane
+        menu2.setBounds(DefultSet.menuX, DefultSet.menuY+DefultSet.menuP, DefultSet.menuWidth, DefultSet.menuHeight);
         contentPanel.add(menu2);
 
+        JLabel menu3 = new JLabel("网络对战");
+        menu3.setFont(font);
+        menu3.setForeground(color);
+        menu3.setBounds(DefultSet.menuX, DefultSet.menuY+DefultSet.menuP*2, DefultSet.menuWidth, DefultSet.menuHeight);
+        contentPanel.add(menu3);
+
+        JLabel menu4 = new JLabel("关闭音乐");
+        menu4.setFont(font);
+        menu4.setForeground(color);
+        menu4.setBounds(DefultSet.menuX, DefultSet.menuY+DefultSet.menuP*3, DefultSet.menuWidth, DefultSet.menuHeight);
+        menu4.addMouseListener(new MusicControlAdapter(audioPlayer,menu4));
+        contentPanel.add(menu4);
+
+        JLabel menu5 = new JLabel("退出游戏");
+        menu5.setFont(font);
+        menu5.setForeground(color);
+        menu5.setBounds(DefultSet.menuX, DefultSet.menuY+DefultSet.menuP*4, DefultSet.menuWidth, DefultSet.menuHeight);
+        menu5.addMouseListener(new ExitAdapter(this,menu5));
+        contentPanel.add(menu5);
 
         //初始化4个JPanel
         panel1 = new JPanel();
@@ -102,7 +128,7 @@ public class ChessFrame extends JFrame {
         chessBoard = new ChessBoard();
         //设置Canvas位置和大小
         chessBoard.setBounds(DefultSet.CanvasPosX, DefultSet.CanvasPosY, 504, 571);
-        chessBoard.addMouseListener(new ChessPieceClick(chessBoard));
+        chessBoard.addMouseListener(new PieceClickAdapter(chessBoard));
         panel1.add(chessBoard);
 
         //对Pane1添加信息栏
@@ -119,6 +145,7 @@ public class ChessFrame extends JFrame {
         MyTimerThread.start();
 
         InfBoard.AddLog("红方执子");
+        audioPlayer.play();
     }
 
 }

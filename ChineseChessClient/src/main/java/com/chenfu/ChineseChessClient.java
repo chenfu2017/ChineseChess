@@ -9,8 +9,6 @@ public class ChineseChessClient {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 ChessFrame chessFrame = new ChessFrame();
-                AudioPlayer audioPlayer = new AudioPlayer("bg.mp3", true);
-                audioPlayer.start();
                 chessFrame.setVisible(true);
             }
         });

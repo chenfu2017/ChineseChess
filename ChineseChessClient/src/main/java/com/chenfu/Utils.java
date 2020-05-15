@@ -14,9 +14,8 @@ public class Utils {
         return Toolkit.getDefaultToolkit().getImage(ChessFrame.class.getResource("/images/" + src));
     }
 
-    public static InputStream getAudioInputStream(String filename) {
-        InputStream resourceAsStream = Utils.class.getResourceAsStream("/music/" + filename);
-        return resourceAsStream;
+    public static String getMusicUrl(String filename) {
+        return Utils.class.getResource("/music/"+filename).getPath();
     }
 
 }

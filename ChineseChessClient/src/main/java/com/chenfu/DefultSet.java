@@ -30,5 +30,9 @@ public class DefultSet {
     public static long stepTime = 90;
     public static long totalTime = 600;
 
+    public static int buttonX = 430;
+    public static int buttonY = 630;
+    public static int buttonP = 120;
+
 
 }

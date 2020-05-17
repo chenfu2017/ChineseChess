@@ -4,6 +4,7 @@ import com.chenfu.adapter.ExitAdapter;
 import com.chenfu.adapter.LoginAdapter;
 import com.chenfu.adapter.MusicControlAdapter;
 import com.chenfu.adapter.PieceClickAdapter;
+import com.chenfu.button.DiyButton;
 import com.chenfu.timer.StepTimer;
 import com.chenfu.timer.TotalTimer;
 
@@ -14,10 +15,7 @@ import java.awt.*;
 public class ChessFrame extends JFrame {
 
     private JPanel contentPanel;
-    private JPanel panel1;
-    private JPanel panel2;
-    private JPanel panel3;
-    private JPanel panel4;
+    private JPanel jPanel;
 
     private static InformationBoard InfBoard;
     private static ChessBoard chessBoard;
@@ -101,38 +99,33 @@ public class ChessFrame extends JFrame {
         contentPanel.add(menu5);
 
         //初始化4个JPanel
-        panel1 = new JPanel();
-        panel2 = new JPanel();
-        panel3 = new JPanel();
-        panel4 = new JPanel();
+        jPanel = new JPanel();
+        jPanel.setBounds(0, 0, 1366, 768);
+        jPanel.setOpaque(false);
+        jPanel.setVisible(true);
+        jPanel.setLayout(null);
 
-        //设置4个JPanel的位置和共同属性
-        panel1.setBounds(0, 0, 1366, 768);
-        panel1.setOpaque(false);
-        panel1.setVisible(true);
-        panel1.setLayout(null);
-
-        //把4个Pane添加进ContentPanel
-        contentPanel.add(panel1);
+        //把Panel添加进ContentPanel
+        contentPanel.add(jPanel);
 
         //对Pane1添加Canvas来绘制棋盘
         chessBoard = new ChessBoard();
         //设置Canvas位置和大小
         chessBoard.setBounds(DefultSet.canvasPosX, DefultSet.canvasPosY, 504, 571);
         chessBoard.addMouseListener(new PieceClickAdapter(chessBoard,this));
-        panel1.add(chessBoard);
+        jPanel.add(chessBoard);
 
         //对Pane1添加信息栏
         InfBoard = new InformationBoard();
         InfBoard.setBounds(DefultSet.infBoardX,DefultSet.infBoardY,DefultSet.infBoardWidth,DefultSet.infBoardHeight);
-        panel1.add(InfBoard);
+        jPanel.add(InfBoard);
 
         //添加时间标签
         JLabel totaltimerLabel = new JLabel();
         totaltimerLabel.setBounds(DefultSet.timerLabelX,DefultSet.timerLabelY,DefultSet.timerLabelWidth,DefultSet.timerLabelHeight);
         totaltimerLabel.setFont(new Font("华文行楷", Font.CENTER_BASELINE, 28));
         totaltimerLabel.setForeground(Color.RED);
-        panel1.add(totaltimerLabel);
+        jPanel.add(totaltimerLabel);
         totalTimer = new TotalTimer(totaltimerLabel);
         totalTimer.start();
 
@@ -140,10 +133,22 @@ public class ChessFrame extends JFrame {
         timerLabel.setBounds(DefultSet.timerLabelX,DefultSet.timerLabelY+DefultSet.timerLabelP,DefultSet.timerLabelWidth,DefultSet.timerLabelHeight);
         timerLabel.setFont(new Font("华文行楷", Font.CENTER_BASELINE, 28));
         timerLabel.setForeground(Color.RED);
-        panel1.add(timerLabel);
+        jPanel.add(timerLabel);
         stepTimer = new StepTimer(timerLabel);
         stepTimer.start();
 
+        //添加按钮
+        DiyButton diyButton1 = new DiyButton("新对局",DefultSet.buttonX,DefultSet.buttonY);
+        jPanel.add(diyButton1);
+
+        DiyButton diyButton2 = new DiyButton("悔棋",DefultSet.buttonX+DefultSet.buttonP,DefultSet.buttonY);
+        jPanel.add(diyButton2);
+
+        DiyButton diyButton3 = new DiyButton("求和",DefultSet.buttonX+DefultSet.buttonP*2,DefultSet.buttonY);
+        jPanel.add(diyButton3);
+
+        DiyButton diyButton4 = new DiyButton("认输",DefultSet.buttonX+DefultSet.buttonP*3,DefultSet.buttonY);
+        jPanel.add(diyButton4);
 
 
         InfBoard.AddLog("红方执子");

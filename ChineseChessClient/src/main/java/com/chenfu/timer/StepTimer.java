@@ -34,7 +34,7 @@ public class StepTimer {
     }
 
     public void reStart(){
-        System.out.println(oldTime);
+        oldTime = System.currentTimeMillis();
     }
 
 }

@@ -85,6 +85,7 @@ public class ChessBoard extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        //设置背景图片
         ImageIcon image = Utils.getImageIcon("M_ChessBoard.png");
         image.setImage(image.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_FAST)); //调整图像的分辨率以适应容器
         image.paintIcon(this, g, 0, 0);

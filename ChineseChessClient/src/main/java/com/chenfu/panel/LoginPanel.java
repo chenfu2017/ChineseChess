@@ -10,7 +10,7 @@ public class LoginPanel extends JPanel {
     private Image image;
 
     public LoginPanel() {
-        image = Utils.getImage("bg.jpg");
+        image = Utils.getImage("login2.jpg");
     }
 
     @Override

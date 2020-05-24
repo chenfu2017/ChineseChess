@@ -31,9 +31,9 @@ public class ChessFrame extends JFrame {
         //设置界面属性
         this.setTitle("chinese chess");
         //设置窗口大小
-        this.setBounds(0, 0, 1366, 768);
+        this.setBounds(0, 0, DefultSet.frameWidth, DefultSet.frameHeight);
         //设置窗口不可改变大小
-        this.setResizable(false);
+        this.setResizable(true);
         //设置默认关闭
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //设置窗口居中
@@ -48,8 +48,10 @@ public class ChessFrame extends JFrame {
 
         //添加背景图片
         JLabel backGround = new JLabel("");
-        backGround.setIcon(Utils.getImageIcon("bg.jpg"));
-        backGround.setBounds(0, 0, 1366, 768);
+        ImageIcon imageIcon = Utils.getImageIcon("bg.jpg");
+        imageIcon.setImage(imageIcon.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_FAST)); //调整图像的分辨率以适应容器
+        backGround.setIcon(imageIcon);
+        backGround.setBounds(0, 0, DefultSet.frameWidth, DefultSet.frameHeight);
         //添加背景图片的关键语句
         this.getLayeredPane().add(backGround, new Integer(Integer.MIN_VALUE));
 
@@ -101,7 +103,7 @@ public class ChessFrame extends JFrame {
 
         //初始化4个JPanel
         jPanel = new JPanel();
-        jPanel.setBounds(0, 0, 1366, 768);
+        jPanel.setBounds(0, 0, DefultSet.frameWidth, DefultSet.frameHeight);
         jPanel.setOpaque(false);
         jPanel.setVisible(true);
         jPanel.setLayout(null);

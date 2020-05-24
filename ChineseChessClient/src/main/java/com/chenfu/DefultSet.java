@@ -2,6 +2,12 @@ package com.chenfu;
 
 public class DefultSet {
 
+//    public static int frameWidth = 1366;
+//    public static int frameHeight = 768;
+
+    public static int frameWidth = 1000;
+    public static int frameHeight = 700;
+
     public static int chessBoarderX = 5;
     public static int chessBoarderY = 5;
     public static int chessBoarderP = 55;

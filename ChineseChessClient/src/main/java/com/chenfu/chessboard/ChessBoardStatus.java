@@ -1,4 +1,4 @@
-package com.chenfu;
+package com.chenfu.chessboard;
 
 import java.util.ArrayList;
 import java.util.List;

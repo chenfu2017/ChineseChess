@@ -1,4 +1,6 @@
-package com.chenfu;
+package com.chenfu.chessboard;
+
+import com.chenfu.utils.ResourceUtils;
 
 import java.awt.Image;
 
@@ -55,7 +57,7 @@ public class ChessPiece {
                 fileName = "red-xiang";
                 break;
         }
-        this.image = Utils.getImage(fileName + ".png");
+        this.image = ResourceUtils.getImage(fileName + ".png");
     }
 
     public int getId() {

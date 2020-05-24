@@ -1,5 +1,7 @@
 package com.chenfu;
 
+import com.chenfu.utils.ResourceUtils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -16,7 +18,7 @@ public class InformationBoard extends JPanel {
 
     public InformationBoard() {
         super();
-        image = Utils.getImage("information.png");
+        image = ResourceUtils.getImage("information.png");
         //设置界面透明
         this.setOpaque(false);
         //初始化显示的10行

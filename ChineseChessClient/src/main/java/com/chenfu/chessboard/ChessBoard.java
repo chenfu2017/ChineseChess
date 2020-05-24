@@ -1,4 +1,8 @@
-package com.chenfu;
+package com.chenfu.chessboard;
+
+import com.chenfu.*;
+import com.chenfu.pojo.GameStatusEnum;
+import com.chenfu.utils.ResourceUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,7 +11,7 @@ public class ChessBoard extends JPanel {
 
     private static final int ROW = 10;
     private static final int COL = 9;
-    public int step = 0;
+    public int step;
     int xx = DefultSet.chessBoarderX;
     int yy = DefultSet.chessBoarderY;
     int pp = DefultSet.chessBoarderP;
@@ -15,9 +19,17 @@ public class ChessBoard extends JPanel {
     private Point point;
     private final Image imageKuang;
     private ChessBoardStatus chessBoardStatus;
+    private ChessFrame chessFrame;
 
-    public ChessBoard() {
+    public ChessBoard(ChessFrame chessFrame) {
+        this.chessFrame = chessFrame;
+        chessPieces = new ChessPiece[ROW][COL];
+        initBoard();
+        imageKuang = ResourceUtils.getImage("kuang.png");
+    }
 
+    public void initBoard(){
+        step = 0;
         chessPieces = new ChessPiece[ROW][COL];
         chessBoardStatus = new ChessBoardStatus();
         //设置默认棋子位置
@@ -73,7 +85,6 @@ public class ChessBoard extends JPanel {
         chessPieces[7][1] = new ChessPiece(13);
         chessPieces[7][7] = new ChessPiece(13);
         chessBoardStatus.save(chessPieces);
-        imageKuang = Utils.getImage("kuang.png");
     }
 
     public Point getPoint() {
@@ -89,20 +100,22 @@ public class ChessBoard extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         //设置背景图片
-        ImageIcon image = Utils.getImageIcon("M_ChessBoard.png");
+        ImageIcon image = ResourceUtils.getImageIcon("M_ChessBoard.png");
         image.setImage(image.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_FAST)); //调整图像的分辨率以适应容器
         image.paintIcon(this, g, 0, 0);
-        for (int i = 0; i < ROW; i++) {
-            for (int j = 0; j < COL; j++) {
-                //发现棋子就绘制
-                if (chessPieces[i][j] != null) {
-                    Image chessImage = chessPieces[i][j].getImage();
-                    g.drawImage(chessImage, xx + j * pp, yy + i * pp, chessImage.getWidth(null), chessImage.getHeight(null), this);
+        if(chessFrame.status == GameStatusEnum.AI_START.status || chessFrame.status == GameStatusEnum.NETWORK_START.status){
+            for (int i = 0; i < ROW; i++) {
+                for (int j = 0; j < COL; j++) {
+                    //发现棋子就绘制
+                    if (chessPieces[i][j] != null) {
+                        Image chessImage = chessPieces[i][j].getImage();
+                        g.drawImage(chessImage, xx + j * pp, yy + i * pp, chessImage.getWidth(null), chessImage.getHeight(null), this);
+                    }
                 }
             }
-        }
-        if (point != null) {
-            g.drawImage(imageKuang, xx + point.x * pp, yy + point.y * pp, 51, 51, this);
+            if (point != null) {
+                g.drawImage(imageKuang, xx + point.x * pp, yy + point.y * pp, 51, 51, this);
+            }
         }
     }
 

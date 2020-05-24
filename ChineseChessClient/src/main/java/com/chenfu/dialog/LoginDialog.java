@@ -1,7 +1,5 @@
 package com.chenfu.dialog;
 
-import com.chenfu.ChessFrame;
-import com.chenfu.Utils;
 import com.chenfu.panel.LoginPanel;
 
 import javax.swing.*;

@@ -1,11 +1,14 @@
 package com.chenfu.adapter;
 
 import com.chenfu.*;
+import com.chenfu.chessboard.ChessBoard;
+import com.chenfu.chessboard.ChessPiece;
+import com.chenfu.pojo.GameStatusEnum;
+import com.chenfu.utils.AudioPlayer;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 
 
 public class PieceClickAdapter extends MouseAdapter {
@@ -34,42 +37,47 @@ public class PieceClickAdapter extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        Point srcpoint = chessBoard.getPoint();
-        AudioPlayer audioPlayer = new AudioPlayer("go.wav",false);
-        int x, y;
-        x = e.getX();
-        y = e.getY();
-        x = (x - DefultSet.chessBoarderX) / DefultSet.chessBoarderP;
-        y = (y - DefultSet.chessBoarderY) / DefultSet.chessBoarderP;
-        if (x < 0 || x > 8 || y < 0 || y > 9) {
-            return;
-        }
+        int status = chessFrame.status;
+        if(status == GameStatusEnum.AI_START.status || status ==GameStatusEnum.NETWORK_START.status){
+            Point srcpoint = chessBoard.getPoint();
+            AudioPlayer audioPlayer = new AudioPlayer("go.wav", false);
+            int x, y;
+            x = e.getX();
+            y = e.getY();
+            x = (x - DefultSet.chessBoarderX) / DefultSet.chessBoarderP;
+            y = (y - DefultSet.chessBoarderY) / DefultSet.chessBoarderP;
+            if (x < 0 || x > 8 || y < 0 || y > 9) {
+                return;
+            }
 //        System.out.println(x+","+y);
-        ChessPiece chessPiece = chessBoard.chessPieces[y][x];
-        Point despoint= new Point(x,y);
-        if(chessPiece !=null){
-            int id = chessPiece.getId();
-            if (chooseOwnPiece(id)) {
+            ChessPiece chessPiece = chessBoard.chessPieces[y][x];
+            Point despoint = new Point(x, y);
+            if (chessPiece != null) {
+                int id = chessPiece.getId();
+                if (chooseOwnPiece(id)) {
 //                System.out.println("选中自己的子:"+id);
-                if (srcpoint == null) {
-                    chessBoard.setPoint(new Point(x,y));
-                }else {
-                    chessBoard.getPoint().x = x;
-                    chessBoard.getPoint().y = y;
+                    if (srcpoint == null) {
+                        chessBoard.setPoint(new Point(x, y));
+                    } else {
+                        chessBoard.getPoint().x = x;
+                        chessBoard.getPoint().y = y;
+                    }
+                    selected = true;
+                } else {
+                    if (selected && !chooseOwnPiece(id) && chessBoard.eatPiece(srcpoint, despoint)) {
+                        goChess(srcpoint, despoint);
+                        audioPlayer.play();
+                    }
                 }
-                selected = true;
-            }else {
-                if(selected && !chooseOwnPiece(id) && chessBoard.eatPiece(srcpoint,despoint)){
-                    goChess(srcpoint,despoint);
+            } else {
+                if (selected && chessBoard.move(srcpoint, despoint)) {
+                    goChess(srcpoint, despoint);
                     audioPlayer.play();
                 }
             }
-        }else {
-            if (selected && chessBoard.move(srcpoint,despoint)) {
-                goChess(srcpoint,despoint);
-                audioPlayer.play();
-            }
+            chessBoard.repaint();
+        } else {
+            chessFrame.getInformationBoard().AddLog("please select game mode!");
         }
-        chessBoard.repaint();
     }
 }

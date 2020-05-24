@@ -1,6 +1,6 @@
 package com.chenfu.adapter;
 
-import com.chenfu.AudioPlayer;
+import com.chenfu.utils.AudioPlayer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;

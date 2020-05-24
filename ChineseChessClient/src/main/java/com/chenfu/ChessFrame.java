@@ -2,10 +2,15 @@ package com.chenfu;
 
 import com.chenfu.adapter.*;
 import com.chenfu.button.DiyButton;
+import com.chenfu.chessboard.ChessBoard;
 import com.chenfu.listener.AskdrawLister;
 import com.chenfu.listener.NewGameLister;
+import com.chenfu.pojo.GameStatusEnum;
+import com.chenfu.pojo.Player;
 import com.chenfu.timer.StepTimer;
 import com.chenfu.timer.TotalTimer;
+import com.chenfu.utils.AudioPlayer;
+import com.chenfu.utils.ResourceUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,17 +20,24 @@ public class ChessFrame extends JFrame {
 
     private JPanel contentPanel;
     private JPanel jPanel;
-    private static InformationBoard informationBoard;
-    private static ChessBoard chessBoard;
+    private InformationBoard informationBoard;
+    private ChessBoard chessBoard;
     private AudioPlayer audioPlayer;
     private StepTimer stepTimer;
     private TotalTimer totalTimer;
-    private int status;
+    private Player player;
+    /*0初始状态
+      1人机开始状态
+      2网络未登录
+      3网络已登录
+      4网络匹配成功
+      5人机未开始状态*/
+    public int status;
 
 
     public ChessFrame() {
         //游戏模式
-        status = 0;
+        status = GameStatusEnum.INIT.status;
         //设置背景音乐
         audioPlayer = new AudioPlayer("bgm.wav", true);
         //设置界面属性
@@ -48,7 +60,7 @@ public class ChessFrame extends JFrame {
 
         //添加背景图片
         JLabel backGround = new JLabel("");
-        ImageIcon bgimage = Utils.getImageIcon("bg.jpg");
+        ImageIcon bgimage = ResourceUtils.getImageIcon("bg.jpg");
         bgimage.setImage(bgimage.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH)); //调整图像的分辨率以适应容器
         backGround.setIcon(bgimage);
         backGround.setBounds(0, 0, DefultSet.frameWidth, DefultSet.frameHeight);
@@ -79,7 +91,7 @@ public class ChessFrame extends JFrame {
         jPanel.add(informationBoard);
 
         //对Pane1添加Canvas来绘制棋盘
-        chessBoard = new ChessBoard();
+        chessBoard = new ChessBoard(this);
         //设置Canvas位置和大小
         chessBoard.setBounds(DefultSet.canvasPosX, DefultSet.canvasPosY, DefultSet.canvasPosWidth, DefultSet.canvasPosHeight);
         chessBoard.addMouseListener(new PieceClickAdapter(chessBoard,this));
@@ -161,11 +173,11 @@ public class ChessFrame extends JFrame {
         return stepTimer;
     }
 
-    public static InformationBoard getInformationBoard() {
+    public InformationBoard getInformationBoard() {
         return informationBoard;
     }
 
-    public static ChessBoard getChessBoard() {
+    public  ChessBoard getChessBoard() {
         return chessBoard;
     }
 
@@ -177,11 +189,11 @@ public class ChessFrame extends JFrame {
         return totalTimer;
     }
 
-    public int getStatus() {
-        return status;
+    public Player getPlayer() {
+        return player;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }

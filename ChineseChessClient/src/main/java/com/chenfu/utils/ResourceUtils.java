@@ -1,10 +1,11 @@
-package com.chenfu;
+package com.chenfu.utils;
+
+import com.chenfu.ChessFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.InputStream;
 
-public class Utils {
+public class ResourceUtils {
 
     public static ImageIcon getImageIcon(String src) {
         return new ImageIcon(Toolkit.getDefaultToolkit().getImage(ChessFrame.class.getResource("/images/" + src)));
@@ -15,7 +16,7 @@ public class Utils {
     }
 
     public static String getMusicUrl(String filename) {
-        return Utils.class.getResource("/music/"+filename).getPath();
+        return ResourceUtils.class.getResource("/music/"+filename).getPath();
     }
 
 }

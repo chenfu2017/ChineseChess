@@ -1,6 +1,7 @@
 package com.chenfu.adapter;
 
 import com.chenfu.ChessFrame;
+import com.chenfu.pojo.GameStatusEnum;
 import com.chenfu.InformationBoard;
 
 import javax.swing.*;
@@ -35,7 +36,7 @@ public class NetworkModeAdapter extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        chessFrame.setStatus(2);
+        chessFrame.status = GameStatusEnum.NETWORK_NO_LOGIN.status;
         informationBoard.AddLog("Network battle mode selected!");
     }
 }

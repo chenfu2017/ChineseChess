@@ -1,6 +1,6 @@
 package com.chenfu.panel;
 
-import com.chenfu.Utils;
+import com.chenfu.utils.ResourceUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ public class LoginPanel extends JPanel {
     private Image image;
 
     public LoginPanel() {
-        image = Utils.getImage("login2.jpg");
+        image = ResourceUtils.getImage("login2.jpg");
     }
 
     @Override

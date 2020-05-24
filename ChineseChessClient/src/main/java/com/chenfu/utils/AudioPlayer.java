@@ -1,4 +1,5 @@
-package com.chenfu;
+package com.chenfu.utils;
+
 import javax.media.bean.playerbean.MediaPlayer;
 
 public class AudioPlayer {
@@ -6,13 +7,13 @@ public class AudioPlayer {
     private String musicUrl;
     
     public static void main(String[] args){
-        String musicUrl = Utils.getMusicUrl("bgm.wav");
+        String musicUrl = ResourceUtils.getMusicUrl("bgm.wav");
         AudioPlayer audioPlayer = new AudioPlayer(musicUrl,true);
     	audioPlayer.play();
     }
 
     public AudioPlayer(String filename, boolean IsLoop){
-        musicUrl = Utils.getMusicUrl(filename);
+        musicUrl = ResourceUtils.getMusicUrl(filename);
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setMediaLocation("file:"+musicUrl);
         mediaPlayer.realize();

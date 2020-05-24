@@ -25,7 +25,8 @@ public class StepTimer {
             @Override
             public void run() {
                 DecimalFormat decimalFormat = new DecimalFormat("00");
-                long midTime =stepTime-(System.currentTimeMillis() - oldTime)/1000;
+//                long midTime =stepTime-(System.currentTimeMillis() - oldTime)/1000;
+                long midTime = stepTime;
                 long mm = midTime / 60 % 60;
                 long ss = midTime % 60;
                 desLabel.setText("步时 " + decimalFormat.format(mm) + ":" + decimalFormat.format(ss)+"");

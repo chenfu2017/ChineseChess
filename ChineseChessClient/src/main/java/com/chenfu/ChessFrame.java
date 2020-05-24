@@ -5,6 +5,7 @@ import com.chenfu.adapter.LoginAdapter;
 import com.chenfu.adapter.MusicControlAdapter;
 import com.chenfu.adapter.PieceClickAdapter;
 import com.chenfu.button.DiyButton;
+import com.chenfu.listener.AskdrawLister;
 import com.chenfu.timer.StepTimer;
 import com.chenfu.timer.TotalTimer;
 
@@ -145,14 +146,16 @@ public class ChessFrame extends JFrame {
         jPanel.add(diyButton2);
 
         DiyButton diyButton3 = new DiyButton("求和",DefultSet.buttonX+DefultSet.buttonP*2,DefultSet.buttonY);
+        diyButton3.addActionListener(new AskdrawLister());
         jPanel.add(diyButton3);
 
         DiyButton diyButton4 = new DiyButton("认输",DefultSet.buttonX+DefultSet.buttonP*3,DefultSet.buttonY);
         jPanel.add(diyButton4);
 
 
-        InfBoard.AddLog("红方执子");
-        audioPlayer.play();
+        InfBoard.AddLog("对局开始！");
+        //播放背景音乐
+//        audioPlayer.play();
     }
 
     public StepTimer getStepTimer() {

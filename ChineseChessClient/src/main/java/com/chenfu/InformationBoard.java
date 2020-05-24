@@ -35,12 +35,12 @@ public class InformationBoard extends JPanel {
         //设置字体颜色
         graphics.setColor(Color.white);
         //设置字体
-        graphics.setFont(new Font("华文行楷", Font.CENTER_BASELINE, 28));
+        graphics.setFont(new Font("华文行楷", Font.CENTER_BASELINE, 20));
         //开启字体抗锯齿
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         //绘制字体，内容为需要显示的10行文字
         for (int i = 0; i < 10; i++) {
-            graphics.drawString(logS[i], 100, 60 + i * 40);
+            graphics.drawString(logS[i], 20, 30 + i * 30);
         }
         //刷新图片流至g
         g.drawImage(bufferedImage, 0, 0, null);

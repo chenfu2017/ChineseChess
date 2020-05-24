@@ -14,10 +14,12 @@ public class ChessBoard extends JPanel {
     public ChessPiece[][] chessPieces;
     private Point point;
     private final Image imageKuang;
+    private ChessBoardStatus chessBoardStatus;
 
     public ChessBoard() {
 
         chessPieces = new ChessPiece[ROW][COL];
+        chessBoardStatus = new ChessBoardStatus();
         //设置默认棋子位置
         //设置黑车
         chessPieces[0][0] = new ChessPiece(20);
@@ -70,6 +72,7 @@ public class ChessBoard extends JPanel {
         //设置红炮
         chessPieces[7][1] = new ChessPiece(13);
         chessPieces[7][7] = new ChessPiece(13);
+        chessBoardStatus.save(chessPieces);
         imageKuang = Utils.getImage("kuang.png");
     }
 

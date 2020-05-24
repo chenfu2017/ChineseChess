@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 
 public class InformationBoard extends JPanel {
 
+    private Image image;
     //记录数据
     StringBuffer log = new StringBuffer();
     //用于储存最后10行
@@ -15,6 +16,7 @@ public class InformationBoard extends JPanel {
 
     public InformationBoard() {
         super();
+        image = Utils.getImage("information.png");
         //设置界面透明
         this.setOpaque(false);
         //初始化显示的10行
@@ -31,16 +33,17 @@ public class InformationBoard extends JPanel {
         //获取图片流的Graphics
         Graphics2D graphics = bufferedImage.createGraphics();
         //绘制背景图片
-        graphics.drawImage(Utils.getImage("information.png"), 0, 0,this);
+//        image = image.getScaledInstance(DefultSet.infBoardWidth, DefultSet.infBoardHeight, Image.SCALE_FAST);
+        graphics.drawImage(image, 0, 0,DefultSet.infBoardWidth,DefultSet.infBoardHeight,this);
         //设置字体颜色
         graphics.setColor(Color.white);
         //设置字体
-        graphics.setFont(new Font("华文行楷", Font.CENTER_BASELINE, 20));
+        graphics.setFont(new Font("华文行楷", Font.CENTER_BASELINE, 16));
         //开启字体抗锯齿
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         //绘制字体，内容为需要显示的10行文字
         for (int i = 0; i < 10; i++) {
-            graphics.drawString(logS[i], 20, 30 + i * 30);
+            graphics.drawString(logS[i], 10, 30 + i * 25);
         }
         //刷新图片流至g
         g.drawImage(bufferedImage, 0, 0, null);

@@ -1,11 +1,9 @@
 package com.chenfu;
 
-import com.chenfu.adapter.ExitAdapter;
-import com.chenfu.adapter.LoginAdapter;
-import com.chenfu.adapter.MusicControlAdapter;
-import com.chenfu.adapter.PieceClickAdapter;
+import com.chenfu.adapter.*;
 import com.chenfu.button.DiyButton;
 import com.chenfu.listener.AskdrawLister;
+import com.chenfu.listener.NewGameLister;
 import com.chenfu.timer.StepTimer;
 import com.chenfu.timer.TotalTimer;
 
@@ -17,15 +15,17 @@ public class ChessFrame extends JFrame {
 
     private JPanel contentPanel;
     private JPanel jPanel;
-
-    private static InformationBoard InfBoard;
+    private static InformationBoard informationBoard;
     private static ChessBoard chessBoard;
     private AudioPlayer audioPlayer;
     private StepTimer stepTimer;
     private TotalTimer totalTimer;
+    private int status;
 
 
     public ChessFrame() {
+        //游戏模式
+        status = 0;
         //设置背景音乐
         audioPlayer = new AudioPlayer("bgm.wav", true);
         //设置界面属性
@@ -48,26 +48,62 @@ public class ChessFrame extends JFrame {
 
         //添加背景图片
         JLabel backGround = new JLabel("");
-        ImageIcon imageIcon = Utils.getImageIcon("bg.jpg");
-        imageIcon.setImage(imageIcon.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_FAST)); //调整图像的分辨率以适应容器
-        backGround.setIcon(imageIcon);
+        ImageIcon bgimage = Utils.getImageIcon("bg.jpg");
+        bgimage.setImage(bgimage.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH)); //调整图像的分辨率以适应容器
+        backGround.setIcon(bgimage);
         backGround.setBounds(0, 0, DefultSet.frameWidth, DefultSet.frameHeight);
         //添加背景图片的关键语句
         this.getLayeredPane().add(backGround, new Integer(Integer.MIN_VALUE));
 
-//        //添加作者信息
-//        JLabel authorInf = new JLabel("");
-//        authorInf.setIcon(Utils.getImageIcon("background.png"));
-//        //设置作者信息位置
-//        ImageIcon imageIcon = Utils.getImageIcon("information.png");
-//        authorInf.setBounds(10, 500, imageIcon.getIconWidth(), imageIcon.getIconHeight());
-//        contentPanel.add(authorInf);
+        /*        //添加作者信息
+        JLabel authorInf = new JLabel("");
+        authorInf.setIcon(Utils.getImageIcon("background.png"));
+        //设置作者信息位置
+        ImageIcon imageIcon = Utils.getImageIcon("information.png");
+        authorInf.setBounds(10, 500, imageIcon.getIconWidth(), imageIcon.getIconHeight());
+        contentPanel.add(authorInf);*/
 
+        //初始化1个JPanel
+        jPanel = new JPanel();
+        jPanel.setBounds(0, 0, DefultSet.frameWidth, DefultSet.frameHeight);
+        jPanel.setOpaque(false);
+        jPanel.setVisible(true);
+        jPanel.setLayout(null);
+
+        //把Panel添加进ContentPanel
+        contentPanel.add(jPanel);
+
+        //对Pane1添加信息栏
+        informationBoard = new InformationBoard();
+        informationBoard.setBounds(DefultSet.infBoardX,DefultSet.infBoardY,DefultSet.infBoardWidth,DefultSet.infBoardHeight);
+        jPanel.add(informationBoard);
+
+        //对Pane1添加Canvas来绘制棋盘
+        chessBoard = new ChessBoard();
+        //设置Canvas位置和大小
+        chessBoard.setBounds(DefultSet.canvasPosX, DefultSet.canvasPosY, DefultSet.canvasPosWidth, DefultSet.canvasPosHeight);
+        chessBoard.addMouseListener(new PieceClickAdapter(chessBoard,this));
+        jPanel.add(chessBoard);
+
+
+        //添加按钮
+        DiyButton diyButton1 = new DiyButton("新对局",DefultSet.buttonX,DefultSet.buttonY);
+        diyButton1.addActionListener(new NewGameLister(this, informationBoard));
+        jPanel.add(diyButton1);
+
+        DiyButton diyButton2 = new DiyButton("悔棋",DefultSet.buttonX+DefultSet.buttonP,DefultSet.buttonY);
+        jPanel.add(diyButton2);
+
+        DiyButton diyButton3 = new DiyButton("求和",DefultSet.buttonX+DefultSet.buttonP*2,DefultSet.buttonY);
+        diyButton3.addActionListener(new AskdrawLister());
+        jPanel.add(diyButton3);
+
+        DiyButton diyButton4 = new DiyButton("认输",DefultSet.buttonX+DefultSet.buttonP*3,DefultSet.buttonY);
+        jPanel.add(diyButton4);
 
         //添加菜单
-
         Font font = new Font("宋体", Font.BOLD, 40);
-        Color color = Color.BLUE;
+        Color color = Color.blue;
         JLabel menu1 = new JLabel("用户登录");
         menu1.setFont(font);
         menu1.setForeground(color);
@@ -79,12 +115,14 @@ public class ChessFrame extends JFrame {
         menu2.setFont(font);
         menu2.setForeground(color);
         menu2.setBounds(DefultSet.menuX, DefultSet.menuY+DefultSet.menuP, DefultSet.menuWidth, DefultSet.menuHeight);
+        menu2.addMouseListener(new AIModeAdapter(this, informationBoard,menu2));
         contentPanel.add(menu2);
 
         JLabel menu3 = new JLabel("网络对战");
         menu3.setFont(font);
         menu3.setForeground(color);
         menu3.setBounds(DefultSet.menuX, DefultSet.menuY+DefultSet.menuP*2, DefultSet.menuWidth, DefultSet.menuHeight);
+        menu3.addMouseListener(new NetworkModeAdapter(this,informationBoard,menu3));
         contentPanel.add(menu3);
 
         JLabel menu4 = new JLabel("关闭音乐");
@@ -101,28 +139,6 @@ public class ChessFrame extends JFrame {
         menu5.addMouseListener(new ExitAdapter(this,menu5));
         contentPanel.add(menu5);
 
-        //初始化4个JPanel
-        jPanel = new JPanel();
-        jPanel.setBounds(0, 0, DefultSet.frameWidth, DefultSet.frameHeight);
-        jPanel.setOpaque(false);
-        jPanel.setVisible(true);
-        jPanel.setLayout(null);
-
-        //把Panel添加进ContentPanel
-        contentPanel.add(jPanel);
-
-        //对Pane1添加Canvas来绘制棋盘
-        chessBoard = new ChessBoard();
-        //设置Canvas位置和大小
-        chessBoard.setBounds(DefultSet.canvasPosX, DefultSet.canvasPosY, 504, 571);
-        chessBoard.addMouseListener(new PieceClickAdapter(chessBoard,this));
-        jPanel.add(chessBoard);
-
-        //对Pane1添加信息栏
-        InfBoard = new InformationBoard();
-        InfBoard.setBounds(DefultSet.infBoardX,DefultSet.infBoardY,DefultSet.infBoardWidth,DefultSet.infBoardHeight);
-        jPanel.add(InfBoard);
-
         //添加时间标签
         JLabel totaltimerLabel = new JLabel();
         totaltimerLabel.setBounds(DefultSet.timerLabelX,DefultSet.timerLabelY,DefultSet.timerLabelWidth,DefultSet.timerLabelHeight);
@@ -130,7 +146,6 @@ public class ChessFrame extends JFrame {
         totaltimerLabel.setForeground(Color.RED);
         jPanel.add(totaltimerLabel);
         totalTimer = new TotalTimer(totaltimerLabel);
-        totalTimer.start();
 
         JLabel timerLabel = new JLabel();
         timerLabel.setBounds(DefultSet.timerLabelX,DefultSet.timerLabelY+DefultSet.timerLabelP,DefultSet.timerLabelWidth,DefultSet.timerLabelHeight);
@@ -138,29 +153,35 @@ public class ChessFrame extends JFrame {
         timerLabel.setForeground(Color.RED);
         jPanel.add(timerLabel);
         stepTimer = new StepTimer(timerLabel);
-        stepTimer.start();
-
-        //添加按钮
-        DiyButton diyButton1 = new DiyButton("新对局",DefultSet.buttonX,DefultSet.buttonY);
-        jPanel.add(diyButton1);
-
-        DiyButton diyButton2 = new DiyButton("悔棋",DefultSet.buttonX+DefultSet.buttonP,DefultSet.buttonY);
-        jPanel.add(diyButton2);
-
-        DiyButton diyButton3 = new DiyButton("求和",DefultSet.buttonX+DefultSet.buttonP*2,DefultSet.buttonY);
-        diyButton3.addActionListener(new AskdrawLister());
-        jPanel.add(diyButton3);
-
-        DiyButton diyButton4 = new DiyButton("认输",DefultSet.buttonX+DefultSet.buttonP*3,DefultSet.buttonY);
-        jPanel.add(diyButton4);
-
-
-        InfBoard.AddLog("对局开始！");
         //播放背景音乐
 //        audioPlayer.play();
     }
 
     public StepTimer getStepTimer() {
         return stepTimer;
+    }
+
+    public static InformationBoard getInformationBoard() {
+        return informationBoard;
+    }
+
+    public static ChessBoard getChessBoard() {
+        return chessBoard;
+    }
+
+    public AudioPlayer getAudioPlayer() {
+        return audioPlayer;
+    }
+
+    public TotalTimer getTotalTimer() {
+        return totalTimer;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

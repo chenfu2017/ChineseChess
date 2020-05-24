@@ -9,12 +9,12 @@ import java.util.TimerTask;
 
 public class TotalTimer {
     private JLabel desLabel;
-    private long stepTime;
+    private long totalTime;
     private long oldTime;
 
     public TotalTimer(JLabel jLabel) {
         desLabel = jLabel;
-        stepTime = DefultSet.totalTime;
+        totalTime = DefultSet.totalTime;
     }
 
     public void start() {
@@ -24,8 +24,7 @@ public class TotalTimer {
             @Override
             public void run() {
                 DecimalFormat decimalFormat = new DecimalFormat("00");
-//                long midTime =stepTime-(System.currentTimeMillis() - oldTime)/1000;
-                long midTime = stepTime;
+                long midTime = totalTime -(System.currentTimeMillis() - oldTime)/1000;
                 long mm = midTime / 60 % 60;
                 long ss = midTime % 60;
                 desLabel.setText("局时 " + decimalFormat.format(mm) + ":" + decimalFormat.format(ss)+"");

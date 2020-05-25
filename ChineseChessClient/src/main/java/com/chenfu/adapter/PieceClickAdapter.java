@@ -55,7 +55,6 @@ public class PieceClickAdapter extends MouseAdapter {
             if (chessPiece != null) {
                 int id = chessPiece.getId();
                 if (chooseOwnPiece(id)) {
-//                System.out.println("选中自己的子:"+id);
                     if (srcpoint == null) {
                         chessBoard.setPoint(new Point(x, y));
                     } else {

@@ -3,14 +3,8 @@ package com.chenfu.utils;
 import javax.media.bean.playerbean.MediaPlayer;
 
 public class AudioPlayer {
-    private MediaPlayer mediaPlayer;
-    private String musicUrl;
-    
-    public static void main(String[] args){
-        String musicUrl = ResourceUtils.getMusicUrl("bgm.wav");
-        AudioPlayer audioPlayer = new AudioPlayer(musicUrl,true);
-    	audioPlayer.play();
-    }
+    private final MediaPlayer mediaPlayer;
+    private final String musicUrl;
 
     public AudioPlayer(String filename, boolean IsLoop){
         musicUrl = ResourceUtils.getMusicUrl(filename);

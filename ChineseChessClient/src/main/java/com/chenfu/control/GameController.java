@@ -7,11 +7,9 @@ import com.chenfu.view.GameView;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Tong on 12.04.
- * GameController, dealing with logic along game process.
- */
 public class GameController {
+
+    private SearchModel searchModel;
 
     private Map<String, ChessPiece> initPieces() {
         Map<String, ChessPiece> pieces = new HashMap<String, ChessPiece>();
@@ -60,10 +58,10 @@ public class GameController {
 
 
     public ChessBoard playChess() {
+        searchModel = new SearchModel();
         initPieces();
         return initBoard();
     }
-
 
     public void moveChess(String key, int[] position, ChessBoard chessBoard) {
 
@@ -71,17 +69,15 @@ public class GameController {
     }
 
 
-    public void responseMoveChess(ChessBoard chessBoard, GameView view) {
-
-        SearchModel searchModel = new SearchModel();
+    public int[] responseMoveChess(ChessBoard chessBoard, GameView view) {
         AlphaBetaNode result = searchModel.search(chessBoard);
         view.movePieceFromAI(result.piece, result.to);
         chessBoard.updatePiece(result.piece, result.to);
+        return result.to;
     }
 
 
     public void printBoard(ChessBoard chessBoard) {
-
         Map<String, ChessPiece> pieces = chessBoard.pieces;
         for (Map.Entry<String, ChessPiece> stringPieceEntry : pieces.entrySet()) {
             ChessPiece chessPiece = stringPieceEntry.getValue();

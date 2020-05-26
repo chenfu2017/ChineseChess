@@ -5,9 +5,9 @@ import com.chenfu.adapter.*;
 import com.chenfu.button.DiyButton;
 import com.chenfu.chess.ChessBoard;
 import com.chenfu.chess.ChessPiece;
-import com.chenfu.chess.Rules;
 import com.chenfu.control.GameController;
 import com.chenfu.listener.AskdrawLister;
+import com.chenfu.listener.NewGameLister;
 import com.chenfu.pojo.GameStatusEnum;
 import com.chenfu.pojo.Player;
 import com.chenfu.timer.StepTimer;
@@ -24,18 +24,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GameView extends JFrame{
-    public Map<String, JLabel> pieceObjects = new HashMap<String, JLabel>();
-    private ChessBoard chessBoard;
+    public Map<String, JLabel> pieceMap = new HashMap<String, JLabel>();
+    private final ChessBoard chessBoard;
     public String selectedPieceKey;
-    private JLayeredPane jLayeredPane;
-    private GameController gameController;
-    private JLabel jLabel;
-    private JPanel contentPanel;
-    private JPanel jPanel;
-    private InformationBoard informationBoard;
-    private AudioPlayer audioPlayer;
-    private StepTimer stepTimer;
-    private TotalTimer totalTimer;
+    private final JLayeredPane jLayeredPane;
+    private final GameController gameController;
+    private final JLabel jLabel;
+    private final InformationBoard informationBoard;
+    private final AudioPlayer audioPlayer;
+    private final StepTimer stepTimer;
+    private final TotalTimer totalTimer;
+    private JLabel kuangLabel;
     private Player player;
     /*0初始状态
     1人机开始状态
@@ -61,7 +60,7 @@ public class GameView extends JFrame{
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        contentPanel = new JPanel();
+        JPanel contentPanel = new JPanel();
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         //不使用布局
         contentPanel.setLayout(null);
@@ -78,7 +77,7 @@ public class GameView extends JFrame{
         jLayeredPane.add(backGround, new Integer(Integer.MIN_VALUE));
 
         //初始化1个JPanel
-        jPanel = new JPanel();
+        JPanel jPanel = new JPanel();
         jPanel.setBounds(0, 0, DefultSet.frameWidth, DefultSet.frameHeight);
         jPanel.setOpaque(false);
         jPanel.setVisible(true);
@@ -92,7 +91,7 @@ public class GameView extends JFrame{
 
         //添加按钮
         DiyButton diyButton1 = new DiyButton("新对局",DefultSet.buttonX,DefultSet.buttonY);
-//        diyButton1.addActionListener(new NewGameLister(this, informationBoard));
+        diyButton1.addActionListener(new NewGameLister(this, informationBoard));
         jPanel.add(diyButton1);
 
         DiyButton diyButton2 = new DiyButton("悔棋",DefultSet.buttonX+DefultSet.buttonP,DefultSet.buttonY);
@@ -150,13 +149,13 @@ public class GameView extends JFrame{
         jLabel.setLocation(DefultSet.canvasPosX, DefultSet.canvasPosY);
         jLabel.setSize(DefultSet.canvasPosWidth, DefultSet.canvasPosHeight);
         jLabel.addMouseListener(new BoardClickListener(this, this.chessBoard,gameController));
-        jLayeredPane.add(jLabel, 1);
+        jLayeredPane.add(jLabel, 2);
 
         /* Initialize player image.*/
         this.jLabel = new JLabel(ResourceUtils.getImageIcon("r.png"));
         this.jLabel.setLocation(DefultSet.playerIconX, DefultSet.playerIconY);
         this.jLabel.setSize(DefultSet.pieceSize,DefultSet.pieceSize);
-        jLayeredPane.add(this.jLabel, 0);
+        jLayeredPane.add(this.jLabel, 2);
 
         /* Initialize gamepanel.chess pieces and listeners on each piece.*/
         Map<String, ChessPiece> pieces = this.chessBoard.pieces;
@@ -166,13 +165,20 @@ public class GameView extends JFrame{
             int[] sPos = modelToViewConverter(pos);
             ImageIcon imageIcon = ResourceUtils.getImageIcon(key.substring(0, 2) + ".png");
             imageIcon.setImage(imageIcon.getImage().getScaledInstance(DefultSet.pieceSize, DefultSet.pieceSize, Image.SCALE_SMOOTH)); //调整图像的分辨率以适应容器
-            JLabel lblPiece = new JLabel(imageIcon);
-            lblPiece.setLocation(sPos[0], sPos[1]);
-            lblPiece.setSize(DefultSet.pieceSize, DefultSet.pieceSize);
-            lblPiece.addMouseListener(new PieceOnClickListener(key));
-            pieceObjects.put(stringPieceEntry.getKey(), lblPiece);
-            jLayeredPane.add(lblPiece, 0);
+            JLabel pieceLabel = new JLabel(imageIcon);
+            pieceLabel.setLocation(sPos[0], sPos[1]);
+            pieceLabel.setSize(DefultSet.pieceSize, DefultSet.pieceSize);
+            pieceLabel.addMouseListener(new PieceOnClickListener(this,gameController,chessBoard,jLayeredPane,key));
+            pieceMap.put(stringPieceEntry.getKey(), pieceLabel);
+            jLayeredPane.add(pieceLabel, 0);
         }
+
+        //添加选中框
+        ImageIcon kuangIcon = ResourceUtils.getImageIcon("kuang.png");
+        kuangIcon.setImage(kuangIcon.getImage().getScaledInstance(DefultSet.pieceSize, DefultSet.pieceSize, Image.SCALE_SMOOTH)); //调整图像的分辨率以适应容器
+        kuangLabel = new JLabel(kuangIcon);
+        kuangLabel.setSize(DefultSet.pieceSize, DefultSet.pieceSize);
+        jLayeredPane.add(kuangLabel,0);
 
         //添加时间标签
         JLabel totaltimerLabel = new JLabel();
@@ -191,25 +197,23 @@ public class GameView extends JFrame{
         this.setVisible(true);
     }
 
-
     public void run() throws InterruptedException {
         while (gameController.hasWin(chessBoard) == 'x') {
             this.showPlayer('r');
-            /* User in. */
             while (chessBoard.player == 'r')
                 Thread.sleep(1000);
 
             if (gameController.hasWin(chessBoard) != 'x')
                 this.showWinner('r');
             this.showPlayer('b');
-            /* AI in. */
-            gameController.responseMoveChess(chessBoard, this);
+            int[]pos= gameController.responseMoveChess(chessBoard, this);
+            getKuangLabel().setLocation(DefultSet.SX_OFFSET + pos[1] * DefultSet.SX_COE,DefultSet.SY_OFFSET + pos[0] * DefultSet.SY_COE);
         }
         this.showWinner('b');
     }
 
     public void movePieceFromModel(String pieceKey, int[] to) {
-        JLabel pieceObject = pieceObjects.get(pieceKey);
+        JLabel pieceObject = pieceMap.get(pieceKey);
         int[] sPos = modelToViewConverter(to);
         pieceObject.setLocation(sPos[0], sPos[1]);
         /* Clear 'from' and 'to' info on the board */
@@ -219,11 +223,11 @@ public class GameView extends JFrame{
     public void movePieceFromAI(String pieceKey, int[] to) {
         ChessPiece inNewPos = chessBoard.getPiece(to);
         if (inNewPos != null) {
-            jLayeredPane.remove(pieceObjects.get(inNewPos.key));
-            pieceObjects.remove(inNewPos.key);
+            jLayeredPane.remove(pieceMap.get(inNewPos.key));
+            pieceMap.remove(inNewPos.key);
         }
 
-        JLabel pieceObject = pieceObjects.get(pieceKey);
+        JLabel pieceObject = pieceMap.get(pieceKey);
         int[] sPos = modelToViewConverter(to);
         pieceObject.setLocation(sPos[0], sPos[1]);
         selectedPieceKey = null;
@@ -250,33 +254,6 @@ public class GameView extends JFrame{
         System.exit(0);
     }
 
-    class PieceOnClickListener extends MouseAdapter {
-        private String key;
-
-        PieceOnClickListener(String key) {
-            this.key = key;
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-            if (selectedPieceKey != null && key.charAt(0) != chessBoard.player) {
-                int[] pos = chessBoard.pieces.get(key).position;
-                int[] selectedPiecePos = chessBoard.pieces.get(selectedPieceKey).position;
-                /* If an enemy piece already has been selected.*/
-                for (int[] each : Rules.getNextMove(selectedPieceKey, selectedPiecePos, chessBoard)) {
-                    if (Arrays.equals(each, pos)) {
-                        jLayeredPane.remove(pieceObjects.get(key));
-                        pieceObjects.remove(key);
-                        gameController.moveChess(selectedPieceKey, pos, chessBoard);
-                        movePieceFromModel(selectedPieceKey, pos);
-                        break;
-                    }
-                }
-            } else if (key.charAt(0) == chessBoard.player) {
-                selectedPieceKey = key;
-            }
-        }
-    }
     public StepTimer getStepTimer() {
         return stepTimer;
     }
@@ -300,5 +277,9 @@ public class GameView extends JFrame{
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public JLabel getKuangLabel() {
+        return kuangLabel;
     }
 }

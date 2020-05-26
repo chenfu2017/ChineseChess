@@ -1,6 +1,6 @@
 package com.chenfu.adapter;
 
-import com.chenfu.ChessFrame;
+import com.chenfu.view.GameView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,19 +9,19 @@ import java.awt.event.MouseEvent;
 
 public class ExitAdapter extends MouseAdapter{
 
-    private ChessFrame chessFrame;
+    private GameView gameView;
     private JLabel jLabel;
     private Color foreground;
 
-    public ExitAdapter(ChessFrame chessFrame, JLabel jLabel) {
-        this.chessFrame = chessFrame;
+    public ExitAdapter(GameView gameView, JLabel jLabel) {
+        this.gameView = gameView;
         this.jLabel = jLabel;
         foreground = jLabel.getForeground();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        chessFrame.dispose();
+        gameView.dispose();
         System.exit(0);
     }
 

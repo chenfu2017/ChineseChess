@@ -1,5 +1,6 @@
-package com.chenfu;
+package com.chenfu.inform;
 
+import com.chenfu.DefultSet;
 import com.chenfu.utils.ResourceUtils;
 
 import javax.swing.*;
@@ -36,7 +37,7 @@ public class InformationBoard extends JPanel {
         Graphics2D graphics = bufferedImage.createGraphics();
         //绘制背景图片
 //        image = image.getScaledInstance(DefultSet.infBoardWidth, DefultSet.infBoardHeight, Image.SCALE_FAST);
-        graphics.drawImage(image, 0, 0,DefultSet.infBoardWidth,DefultSet.infBoardHeight,this);
+        graphics.drawImage(image, 0, 0, DefultSet.infBoardWidth,DefultSet.infBoardHeight,this);
         //设置字体颜色
         graphics.setColor(Color.white);
         //设置字体

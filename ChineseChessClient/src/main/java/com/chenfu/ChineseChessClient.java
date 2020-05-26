@@ -1,17 +1,12 @@
 package com.chenfu;
 
-import java.awt.*;
+import com.chenfu.view.GameView;
 
 public class ChineseChessClient {
 
-    public static void main(String[] args) {
-
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ChessFrame chessFrame = new ChessFrame();
-                chessFrame.setVisible(true);
-            }
-        });
-
+    public static void main(String[] args) throws InterruptedException {
+        GameView gameView = new GameView();
+        gameView.run();
     }
+
 }

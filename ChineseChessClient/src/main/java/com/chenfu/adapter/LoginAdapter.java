@@ -1,7 +1,7 @@
 package com.chenfu.adapter;
 
-import com.chenfu.ChessFrame;
 import com.chenfu.dialog.LoginDialog;
+import com.chenfu.view.GameView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,12 +10,12 @@ import java.awt.event.MouseEvent;
 
 public class LoginAdapter extends MouseAdapter {
 
-    private ChessFrame chessFrame;
+    private GameView gameView;
     private JLabel jLabel;
     private Color foreground;
 
-    public LoginAdapter(ChessFrame chessFrame,JLabel jLabel) {
-        this.chessFrame = chessFrame;
+    public LoginAdapter(GameView gameView, JLabel jLabel) {
+        this.gameView = gameView;
         this.jLabel = jLabel;
         foreground = jLabel.getForeground();
     }
@@ -23,7 +23,7 @@ public class LoginAdapter extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         LoginDialog loginDialog = new LoginDialog();
-        loginDialog.showLoginDialog(chessFrame,jLabel);
+        loginDialog.showLoginDialog(gameView,jLabel);
     }
 
     @Override

@@ -1,18 +1,17 @@
 package com.chenfu.listener;
 
-import com.chenfu.ChessFrame;
-import com.chenfu.InformationBoard;
+import com.chenfu.inform.InformationBoard;
+import com.chenfu.view.GameView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class NewGameLister implements ActionListener {
 
-    private ChessFrame chessFrame;
+    private GameView gameView;
     private InformationBoard informationBoard;
-
-    public NewGameLister(ChessFrame chessFrame,InformationBoard informationBoard) {
-        this.chessFrame = chessFrame;
+    public NewGameLister(GameView gameView, InformationBoard informationBoard) {
+        this.gameView = gameView;
         this.informationBoard = informationBoard;
     }
 
@@ -26,15 +25,15 @@ public class NewGameLister implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int status = chessFrame.status;
+        int status = gameView.status;
         switch (status) {
             case 1:informationBoard.AddLog("请选择游戏模式！");break;
             case 3:
-                chessFrame.getChessBoard().initBoard();
-                chessFrame.getStepTimer().reStart();
-                chessFrame.getTotalTimer().reStart();
-                chessFrame.getChessBoard().setPoint(null);
-                chessFrame.repaint();
+//                chessFrame.getChessBoard().initBoard();
+//                chessFrame.getStepTimer().reStart();
+//                chessFrame.getTotalTimer().reStart();
+//                chessFrame.getChessBoard().setPoint(null);
+                gameView.repaint();
                 informationBoard.AddLog("重新开始！");break;
             case 4:
                 informationBoard.AddLog("please login!");break;

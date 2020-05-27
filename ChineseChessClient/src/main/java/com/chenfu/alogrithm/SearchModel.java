@@ -1,7 +1,7 @@
 package com.chenfu.alogrithm;
 
 
-
+import com.chenfu.DefaultSet;
 import com.chenfu.chess.ChessBoard;
 import com.chenfu.chess.ChessPiece;
 import com.chenfu.chess.Rules;
@@ -10,25 +10,28 @@ import com.chenfu.control.GameController;
 import java.util.ArrayList;
 import java.util.Map;
 
-/**
- * Created by Tong on 12.08.
- * Alpha beta search.
- */
 public class SearchModel {
-    private static int DEPTH = 2;
+    private static int DEPTH;
     private ChessBoard chessBoard;
-    private GameController controller = new GameController();
+    private GameController controller;
+
+    public SearchModel(GameController controller) {
+        this.controller = controller;
+    }
 
     public AlphaBetaNode search(ChessBoard chessBoard) {
         this.chessBoard = chessBoard;
-        if (chessBoard.pieces.size() < 28)
-            DEPTH = 3;
-        if (chessBoard.pieces.size() < 16)
-            DEPTH = 4;
-        if (chessBoard.pieces.size() < 6)
-            DEPTH = 5;
-        if (chessBoard.pieces.size() < 4)
-            DEPTH = 6;
+        DEPTH = DefaultSet.DEPTH;
+        if (chessBoard.stringChessPieceMap.size() < 20)
+            DEPTH = DefaultSet.DEPTH + 1;
+        if (chessBoard.stringChessPieceMap.size() < 12)
+            DEPTH = DefaultSet.DEPTH + 2;
+        if (chessBoard.stringChessPieceMap.size() < 6)
+            DEPTH = DefaultSet.DEPTH + 3;
+        if (chessBoard.stringChessPieceMap.size() < 4)
+            DEPTH = DefaultSet.DEPTH + 4;
+        System.out.println("棋子数量：" + chessBoard.stringChessPieceMap.size());
+        System.out.println("递归深度：" + DEPTH);
         long startTime = System.currentTimeMillis();
         AlphaBetaNode best = null;
         ArrayList<AlphaBetaNode> moves = generateMovesForAll(true);
@@ -42,12 +45,12 @@ public class SearchModel {
             /* Back move*/
             chessBoard.updatePiece(alphaBetaNode.piece, alphaBetaNode.from);
             if (eaten != null) {
-                chessBoard.pieces.put(eaten.key, eaten);
+                chessBoard.stringChessPieceMap.put(eaten.key, eaten);
                 chessBoard.backPiece(eaten.key);
             }
         }
         long finishTime = System.currentTimeMillis();
-        System.out.println(finishTime - startTime);
+        System.out.println("搜索时间" + (finishTime - startTime) / 1000 + "秒");
         return best;
     }
 
@@ -61,7 +64,7 @@ public class SearchModel {
         synchronized (this) {
             for (final AlphaBetaNode n : moves) {
                 ChessPiece eaten = chessBoard.updatePiece(n.piece, n.to);
-            /* Is maximizing player? */
+                /* Is maximizing player? */
                 final int finalBeta = beta;
                 final int finalAlpha = alpha;
                 final int finalDepth = depth;
@@ -85,17 +88,16 @@ public class SearchModel {
                         }).run();
                         beta = temp[0];
                     }
-                }
-                else {
+                } else {
                     if (isMax) alpha = Math.max(alpha, alphaBeta(depth - 1, alpha, beta, false));
                     else beta = Math.min(beta, alphaBeta(depth - 1, alpha, beta, true));
                 }
                 chessBoard.updatePiece(n.piece, n.from);
                 if (eaten != null) {
-                    chessBoard.pieces.put(eaten.key, eaten);
+                    chessBoard.stringChessPieceMap.put(eaten.key, eaten);
                     chessBoard.backPiece(eaten.key);
                 }
-            /* Cut-off */
+                /* Cut-off */
                 if (beta <= alpha) break;
             }
         }
@@ -104,7 +106,7 @@ public class SearchModel {
 
     private ArrayList<AlphaBetaNode> generateMovesForAll(boolean isMax) {
         ArrayList<AlphaBetaNode> moves = new ArrayList<AlphaBetaNode>();
-        for (Map.Entry<String, ChessPiece> stringPieceEntry : chessBoard.pieces.entrySet()) {
+        for (Map.Entry<String, ChessPiece> stringPieceEntry : chessBoard.stringChessPieceMap.entrySet()) {
             ChessPiece chessPiece = stringPieceEntry.getValue();
             if (isMax && chessPiece.color == 'r') continue;
             if (!isMax && chessPiece.color == 'b') continue;

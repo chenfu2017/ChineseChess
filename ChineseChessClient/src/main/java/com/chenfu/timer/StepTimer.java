@@ -1,7 +1,7 @@
 package com.chenfu.timer;
 
 
-import com.chenfu.DefultSet;
+import com.chenfu.DefaultSet;
 
 import javax.swing.*;
 import java.text.DecimalFormat;
@@ -15,7 +15,7 @@ public class StepTimer {
 
     public StepTimer(JLabel jLabel) {
         desLabel = jLabel;
-        stepTime = DefultSet.stepTime;
+        stepTime = DefaultSet.stepTime;
     }
 
     public void start() {

@@ -17,7 +17,6 @@ public class AudioPlayer {
     public void play(){
         try{
 	        mediaPlayer.start();
-            System.out.println("start:" + musicUrl);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -26,7 +25,6 @@ public class AudioPlayer {
    
     public void stop(){
         mediaPlayer.stop();
-        System.out.println("stop:" + musicUrl);
     }
 
 }

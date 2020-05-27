@@ -1,6 +1,6 @@
 package com.chenfu.timer;
 
-import com.chenfu.DefultSet;
+import com.chenfu.DefaultSet;
 
 import javax.swing.*;
 import java.text.DecimalFormat;
@@ -14,7 +14,7 @@ public class TotalTimer {
 
     public TotalTimer(JLabel jLabel) {
         desLabel = jLabel;
-        totalTime = DefultSet.totalTime;
+        totalTime = DefaultSet.totalTime;
     }
 
     public void start() {

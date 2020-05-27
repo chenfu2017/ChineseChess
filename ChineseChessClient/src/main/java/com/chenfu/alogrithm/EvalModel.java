@@ -5,20 +5,13 @@ import com.chenfu.chess.ChessPiece;
 
 import java.util.Map;
 
-/**
- * Created by Tong on 12.08.
- * Eval Model.
- */
 public class EvalModel {
     /*  [red, black] >> [PieceValue, PiecePosition, PieceControl, PieceFlexible, PieceProtect, PieceFeature]*/
     /* However, only PieceValue and PiecePosition are implemented, so the array size is set to 2. */
     private int[][] values = new int[2][2];
 
-    /**
-     * @param player, eval the situation in player's perspective.
-     */
     public int eval(ChessBoard chessBoard, char player) {
-        for (Map.Entry<String, ChessPiece> stringPieceEntry : chessBoard.pieces.entrySet()) {
+        for (Map.Entry<String, ChessPiece> stringPieceEntry : chessBoard.stringChessPieceMap.entrySet()) {
             ChessPiece chessPiece = stringPieceEntry.getValue();
             /* The table in PiecePosition is for red player in default. To eval black player, needs to perform a mirror transformation. */
             int[] reversePosition = new int[]{chessBoard.BOARD_HEIGHT - 1 - chessPiece.position[0], chessPiece.position[1]};

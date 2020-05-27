@@ -1,6 +1,5 @@
 package com.chenfu.adapter;
 
-import com.chenfu.DefultSet;
 import com.chenfu.chess.ChessBoard;
 import com.chenfu.chess.Rules;
 import com.chenfu.control.GameController;
@@ -29,20 +28,22 @@ public class PieceOnClickListener extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        int[] pos = chessBoard.pieces.get(key).position;
+        int[] pos = chessBoard.stringChessPieceMap.get(key).position;
         if (gameView.selectedPieceKey != null && key.charAt(0) != chessBoard.player) {
-            int[] selectedPiecePos = chessBoard.pieces.get(gameView.selectedPieceKey).position;
+            int[] selectedPiecePos = chessBoard.stringChessPieceMap.get(gameView.selectedPieceKey).position;
             for (int[] each : Objects.requireNonNull(Rules.getNextMove(gameView.selectedPieceKey, selectedPiecePos, chessBoard))) {
                 if (Arrays.equals(each, pos)) {
-                    jLayeredPane.remove(gameView.pieceMap.get(key));
-                    gameView.pieceMap.remove(key);
+                    JLabel jLabel = gameView.stringJLabelMap.get(key);
+                    jLabel.setVisible(false);
+//                    jLayeredPane.remove(gameView.stringJLabelMap.get(key));
+//                    gameView.stringJLabelMap.remove(key);
                     gameController.moveChess(gameView.selectedPieceKey, pos, chessBoard);
                     gameView.movePieceFromModel(gameView.selectedPieceKey, pos);
                     break;
                 }
             }
         } else if (key.charAt(0) == chessBoard.player) {
-            gameView.getKuangLabel().setLocation(DefultSet.SX_OFFSET + pos[1] * DefultSet.SX_COE,DefultSet.SY_OFFSET + pos[0] * DefultSet.SY_COE);
+            gameView.setSquareLocation(pos);
             gameView.selectedPieceKey = key;
         }
     }

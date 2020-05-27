@@ -3,7 +3,6 @@ package com.chenfu.adapter;
 import com.chenfu.view.GameView;
 import com.chenfu.pojo.GameStatusEnum;
 import com.chenfu.inform.InformationBoard;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -37,8 +36,5 @@ public class AIModeAdapter extends MouseAdapter {
     public void mouseClicked(MouseEvent e) {
         gameView.status = GameStatusEnum.AI_START.status;
         informationBoard.AddLog("AI combat mode selected!");
-        gameView.getStepTimer().start();
-        gameView.getTotalTimer().start();
-        gameView.repaint();
     }
 }

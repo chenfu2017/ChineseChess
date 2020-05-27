@@ -2,10 +2,7 @@ package com.chenfu.alogrithm;
 
 import java.util.Arrays;
 
-/**
- * Created by Tong on 12.18.
- * Store piece move in alpha beta search.
- */
+
 public class AlphaBetaNode {
     public String piece;
     public int[] from;

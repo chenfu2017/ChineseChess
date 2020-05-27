@@ -1,6 +1,8 @@
 package com.chenfu;
 
-public class DefultSet {
+public class DefaultSet {
+
+    public static int DEPTH = 2;
 
     public static int canvasPosX = 240;
     public static int canvasPosY = 30;

@@ -1,6 +1,7 @@
 package com.chenfu.inform;
 
 import com.chenfu.DefaultSet;
+import com.chenfu.netty.Client;
 import com.chenfu.utils.ResourceUtils;
 
 import javax.swing.*;
@@ -17,7 +18,9 @@ public class InformationBoard extends JPanel {
     //Add方法的插入位置
     int Address = 0;
 
-    public InformationBoard() {
+    private static InformationBoard instance;
+
+    private InformationBoard(){
         super();
         image = ResourceUtils.getImage("information.png");
         //设置界面透明
@@ -28,6 +31,13 @@ public class InformationBoard extends JPanel {
         }
         //设置插入位置为第0行
         Address = 0;
+    }
+
+    public static synchronized InformationBoard getInstance() {
+        if (instance == null) {
+            instance = new InformationBoard();
+        }
+        return instance;
     }
 
     public void paintComponent(Graphics g) {

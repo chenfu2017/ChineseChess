@@ -1,6 +1,11 @@
 package com.chenfu.dialog;
 
+import com.chenfu.netty.Client;
 import com.chenfu.panel.LoginPanel;
+import com.chenfu.pojo.DataContent;
+import com.chenfu.pojo.MsgActionEnum;
+import com.chenfu.pojo.Player;
+import io.netty.channel.Channel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +16,7 @@ public class LoginDialog {
 
     private int width;
     private int height;
+    private Client client;
 
     public LoginDialog() {
         this.width = 260;
@@ -23,6 +29,7 @@ public class LoginDialog {
     }
 
     public void showLoginDialog(JFrame owner, JComponent parentComponent) {
+        client = Client.getInstance();
         // 创建一个模态对话框
         JDialog dialog = new JDialog(owner, "用户登录", true);
         // 设置对话框的宽高
@@ -41,9 +48,12 @@ public class LoginDialog {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 关闭对话框
-                System.out.println(username.getText());
-                System.out.println(password.getPassword());
+                Player player = new Player(username.getText(),String.valueOf(password.getPassword()));
+                DataContent dataContent = new DataContent();
+                dataContent.setAction(MsgActionEnum.LOGIN.type);
+                dataContent.setObject(player);
+                client.getChannel().writeAndFlush(dataContent);
+                dialog.dispose();
             }
         });
         JButton cancelButton = new JButton("取消");

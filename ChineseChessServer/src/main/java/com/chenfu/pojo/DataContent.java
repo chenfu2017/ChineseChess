@@ -10,7 +10,8 @@ import java.io.Serializable;
 public class DataContent implements Serializable {
 
     private static final long serialVersionUID = 42L;
-    private int action;		// 动作类型
+
+    private int action;
     private Object object;
 
     @Override

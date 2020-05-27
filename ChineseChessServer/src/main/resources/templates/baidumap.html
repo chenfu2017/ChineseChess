@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body, html {width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
+        #allmap{width:100%;height:100%;}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=c375v6IdS5AkUbqT7tpP0bAS6VwwqGZj"></script>
+    <title>交警小助手</title>
+</head>
+<body>
+<div id="allmap"></div>
+</body>
+</html>
+<script type="text/javascript">
+    // 百度地图API功能
+    var map = new BMap.Map("allmap");
+    var point = new BMap.Point(113.278472,35.193568);
+    map.centerAndZoom(point, 13);
+    map.addControl(new BMap.MapTypeControl({
+        mapTypes:[
+            BMAP_NORMAL_MAP,
+            BMAP_HYBRID_MAP
+        ]}));
+    map.setCurrentCity("焦作");          // 设置地图显示的城市 此项是必须设置的
+    map.enableScrollWheelZoom(true);
+    map.disableDoubleClickZoom(true);
+
+
+    function chujing(){
+        var p1 = new BMap.Point(113.258472,35.157568);
+        var p2 = new BMap.Point(113.235472,35.179568);
+        var driving = new BMap.DrivingRoute(map, {renderOptions:{map: map, autoViewport: true}});
+        driving.search(p1, p2);
+    }
+
+    function changeColor(id){
+        var allOverlay = map.getOverlays();
+        for (var i = 0; i < allOverlay.length -1; i++){
+            if(allOverlay[i].getLabel().content == id){
+                var icon = new BMap.Icon("../static/img/redcar.png", new BMap.Size(33,25));
+                allOverlay[i].setIcon(icon);
+            }
+        }
+    }
+    addpolice("张警官",113.258472,35.157568);
+    addpolice("郑警官（npc）", 113.298472,35.157568);
+    adddriver("鲁A.8M123",113.235472,35.179568);
+    adddriver("冀B.30000(npc)",113.289472,35.191568);
+    adddriver("豫N.38090(npc)",113.216472,35.197568);
+    adddriver("HPU.30000(npc)",113.226472,35.139568);
+
+
+    // 编写自定义函数,创建标注
+    function addpolice(policeid,longtitude,latitude){
+        var myIcon = new BMap.Icon("../static/img/police.png", new BMap.Size(25,25));
+        var	point = new BMap.Point(longtitude,latitude);
+        var marker = new BMap.Marker(point,{icon:myIcon});
+        marker.addEventListener("click",chujing);
+        var label = new BMap.Label(policeid,{offset:new BMap.Size(25,-17)});
+        map.addOverlay(marker);
+        marker.setLabel(label);
+        return true;
+    }
+
+    function changepolice(policeid,longtitude,latitude) {
+        var allOverlay = map.getOverlays();
+        var point = new BMap.Point(longtitude,latitude);
+        for (var i = 0; i < allOverlay.length; i++){
+            if(allOverlay[i].Qa==true){
+                if(allOverlay[i].getLabel().content == policeid){
+                    allOverlay[i].setPosition(point);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function adddriver(driverid,longtitude,latitude){
+        var myIcon = new BMap.Icon("../static/img/bluecar.png", new BMap.Size(33,25));
+        var	point = new BMap.Point(longtitude,latitude);
+        var marker = new BMap.Marker(point,{icon:myIcon});
+        var label = new BMap.Label(driverid,{offset:new BMap.Size(30,-13)});
+        map.addOverlay(marker);
+        marker.setLabel(label);
+        return true;
+    }
+
+
+    function changedriver(driverid,longtitude,latitude) {
+        var allOverlay = map.getOverlays();
+        var point = new BMap.Point(longtitude,latitude);
+        for (var i = 0; i < allOverlay.length; i++){
+            if(allOverlay[i].Qa==true){
+                if(allOverlay[i].getLabel().content == driverid){
+                    allOverlay[i].setPosition(point);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function get() {
+        var allOverlay = map.getOverlays();
+        console.log(allOverlay);
+    }
+
+
+    function removeOverlay(id){
+        var allOverlay = map.getOverlays();
+        for (var i = 0; i < allOverlay.length; i++){
+            if(allOverlay[i].Qa==true) {
+                if (allOverlay[i].getLabel().content == id) {
+                    map.removeOverlay(allOverlay[i]);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+</script>

@@ -8,6 +8,7 @@ import com.chenfu.chess.ChessPiece;
 import com.chenfu.control.GameController;
 import com.chenfu.listener.AskdrawLister;
 import com.chenfu.listener.NewGameLister;
+import com.chenfu.netty.Client;
 import com.chenfu.pojo.GameStatusEnum;
 import com.chenfu.pojo.Player;
 import com.chenfu.timer.StepTimer;
@@ -23,8 +24,8 @@ import java.util.Map;
 public class GameView extends JFrame{
     public Map<String, JLabel> stringJLabelMap = new HashMap<String, JLabel>();
     public Map<String, ChessPiece> pieces;
-    private ChessBoard chessBoard;
     public String selectedPieceKey;
+    private ChessBoard chessBoard;
     private final JLayeredPane jLayeredPane;
     private final GameController gameController;
     private final JLabel jLabel;
@@ -33,7 +34,7 @@ public class GameView extends JFrame{
     private final StepTimer stepTimer;
     private final TotalTimer totalTimer;
     private JLabel kuangLabel;
-    private Player player;
+    private static Player player;
     /*0初始状态
     1人机开始状态
     2网络未登录
@@ -41,11 +42,13 @@ public class GameView extends JFrame{
     4网络匹配成功
     5人机未开始状态*/
     public int status;
+    private Client client;
 
     public GameView() {
         gameController = new GameController();
         chessBoard = new ChessBoard();
         jLayeredPane = this.getLayeredPane();
+        client = Client.getInstance();
         status = GameStatusEnum.INIT.status;
         //设置背景音乐
         audioPlayer = new AudioPlayer("bgm.wav", true);
@@ -83,7 +86,7 @@ public class GameView extends JFrame{
         contentPanel.add(jPanel);
 
         //对Pane1添加信息栏
-        informationBoard = new InformationBoard();
+        informationBoard = InformationBoard.getInstance();
         informationBoard.setBounds(DefaultSet.infBoardX, DefaultSet.infBoardY, DefaultSet.infBoardWidth, DefaultSet.infBoardHeight);
         jPanel.add(informationBoard);
 

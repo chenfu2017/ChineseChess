@@ -1,12 +1,12 @@
 package com.chenfu.pojo;
 
+import java.io.Serializable;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * 
@@ -27,6 +27,7 @@ import java.util.List;
 public class JSONResult implements Serializable {
 
     private static final long serialVersionUID = 40L;
+
     // 定义jackson对象
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -135,13 +136,4 @@ public class JSONResult implements Serializable {
         }
     }
 
-    @Override
-    public String toString() {
-        return "JSONResult{" +
-                "status=" + status +
-                ", msg='" + msg + '\'' +
-                ", data=" + data +
-                ", ok='" + ok + '\'' +
-                '}';
-    }
 }

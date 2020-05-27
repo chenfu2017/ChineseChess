@@ -36,7 +36,7 @@ public class NetworkModeAdapter extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        gameView.status = GameStatusEnum.NETWORK_NO_LOGIN.status;
+        gameView.status = GameStatusEnum.NETWORK_MODE.status;
         informationBoard.AddLog("Network battle mode selected!");
     }
 }

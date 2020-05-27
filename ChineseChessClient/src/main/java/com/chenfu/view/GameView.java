@@ -195,20 +195,41 @@ public class GameView extends JFrame{
         this.setVisible(true);
     }
 
-    public void run() throws InterruptedException {
-        while (gameController.hasWin(chessBoard) == 'x') {
+    public void run() throws InterruptedException{
+        while (true){
             this.showPlayer('r');
             while (chessBoard.player == 'r')
                 Thread.sleep(1000);
-
-            if (gameController.hasWin(chessBoard) != 'x')
-                this.showWinner('r');
+            if (gameController.hasWin(chessBoard) == 'r'){
+                showWinner('r');
+            }
             this.showPlayer('b');
             int[]pos= gameController.responseMoveChess(chessBoard, this);
             getKuangLabel().setLocation(DefaultSet.SX_OFFSET + pos[1] * DefaultSet.SX_COE, DefaultSet.SY_OFFSET + pos[0] * DefaultSet.SY_COE);
             getStepTimer().reStart();
+            if (gameController.hasWin(chessBoard) == 'b'){
+                showWinner('b');
+            }
         }
-        this.showWinner('b');
+    }
+
+
+    public void newAIGame(){
+        chessBoard.initChessBoard();
+        Map<String, ChessPiece> stringChessPieceMap = chessBoard.stringChessPieceMap;
+        for (Map.Entry<String, ChessPiece> stringPieceEntry : stringChessPieceMap.entrySet()) {
+            String key = stringPieceEntry.getKey();
+            ChessPiece value = stringPieceEntry.getValue();
+            int[] position = value.position;
+            JLabel jLabel = stringJLabelMap.get(key);
+            int[] realpos = modelToViewConverter(position);
+            jLabel.setLocation(realpos[0],realpos[1]);
+            jLabel.setVisible(true);
+        }
+        getStepTimer().start();
+        getTotalTimer().start();
+        setSquareLocation(-5,-5);
+        selectedPieceKey = null;
     }
 
     public void movePieceFromModel(String pieceKey, int[] to) {
@@ -253,7 +274,6 @@ public class GameView extends JFrame{
             AudioPlayer audioPlayer = new AudioPlayer("gamewin.wav", false);
             audioPlayer.play();
             JOptionPane.showMessageDialog(this,"红方获得胜利！", "游戏信息", JOptionPane.INFORMATION_MESSAGE);
-
         }else {
             AudioPlayer audioPlayer = new AudioPlayer("gamelose.wav", false);
             audioPlayer.play();
@@ -300,23 +320,5 @@ public class GameView extends JFrame{
         }else {
             informationBoard.AddLog("请选择游戏模式！");
         }
-    }
-
-    public void newAIGame(){
-        chessBoard.initChessBoard();
-        Map<String, ChessPiece> stringChessPieceMap = chessBoard.stringChessPieceMap;
-        for (Map.Entry<String, ChessPiece> stringPieceEntry : stringChessPieceMap.entrySet()) {
-            String key = stringPieceEntry.getKey();
-            ChessPiece value = stringPieceEntry.getValue();
-            int[] position = value.position;
-            JLabel jLabel = stringJLabelMap.get(key);
-            int[] realpos = modelToViewConverter(position);
-            jLabel.setLocation(realpos[0],realpos[1]);
-            jLabel.setVisible(true);
-        }
-        getStepTimer().start();
-        getTotalTimer().start();
-        setSquareLocation(-5,-5);
-        selectedPieceKey = null;
     }
 }

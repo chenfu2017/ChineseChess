@@ -3,6 +3,7 @@ package com.chenfu.adapter;
 import com.chenfu.chess.ChessBoard;
 import com.chenfu.chess.Rules;
 import com.chenfu.control.GameController;
+import com.chenfu.utils.AudioPlayer;
 import com.chenfu.view.GameView;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -33,16 +34,19 @@ public class PieceOnClickListener extends MouseAdapter {
             int[] selectedPiecePos = chessBoard.stringChessPieceMap.get(gameView.selectedPieceKey).position;
             for (int[] each : Objects.requireNonNull(Rules.getNextMove(gameView.selectedPieceKey, selectedPiecePos, chessBoard))) {
                 if (Arrays.equals(each, pos)) {
+                    AudioPlayer audioPlayer = new AudioPlayer("eat.wav", false);
+                    audioPlayer.play();
                     JLabel jLabel = gameView.stringJLabelMap.get(key);
                     jLabel.setVisible(false);
-//                    jLayeredPane.remove(gameView.stringJLabelMap.get(key));
-//                    gameView.stringJLabelMap.remove(key);
                     gameController.moveChess(gameView.selectedPieceKey, pos, chessBoard);
                     gameView.movePieceFromModel(gameView.selectedPieceKey, pos);
                     break;
                 }
+
             }
         } else if (key.charAt(0) == chessBoard.player) {
+            AudioPlayer audioPlayer = new AudioPlayer("select.wav", false);
+            audioPlayer.play();
             gameView.setSquareLocation(pos);
             gameView.selectedPieceKey = key;
         }

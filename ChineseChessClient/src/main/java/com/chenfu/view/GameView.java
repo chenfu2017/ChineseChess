@@ -96,7 +96,7 @@ public class GameView extends JFrame{
         jPanel.add(diyButton2);
 
         DiyButton diyButton3 = new DiyButton("求和", DefaultSet.buttonX+ DefaultSet.buttonP*2, DefaultSet.buttonY);
-        diyButton3.addActionListener(new AskdrawLister());
+        diyButton3.addActionListener(new AskdrawLister(this));
         jPanel.add(diyButton3);
 
         DiyButton diyButton4 = new DiyButton("认输", DefaultSet.buttonX+ DefaultSet.buttonP*3, DefaultSet.buttonY);
@@ -205,8 +205,6 @@ public class GameView extends JFrame{
                 this.showWinner('r');
             this.showPlayer('b');
             int[]pos= gameController.responseMoveChess(chessBoard, this);
-            AudioPlayer audioPlayer = new AudioPlayer("go.wav",false);
-            audioPlayer.play();
             getKuangLabel().setLocation(DefaultSet.SX_OFFSET + pos[1] * DefaultSet.SX_COE, DefaultSet.SY_OFFSET + pos[0] * DefaultSet.SY_COE);
             getStepTimer().reStart();
         }
@@ -226,8 +224,6 @@ public class GameView extends JFrame{
         if (inNewPos != null) {
             JLabel jLabel = stringJLabelMap.get(inNewPos.key);
             jLabel.setVisible(false);
-//            jLayeredPane.remove(stringJLabelMap.get(inNewPos.key));
-//            stringJLabelMap.remove(inNewPos.key);
         }
 
         JLabel pieceObject = stringJLabelMap.get(pieceKey);
@@ -253,7 +249,16 @@ public class GameView extends JFrame{
     }
 
     public void showWinner(char player) {
-        JOptionPane.showMessageDialog(null, (player == 'r') ? "Red player has won!" : "Black player has won!", "Intelligent Chinese Chess", JOptionPane.INFORMATION_MESSAGE);
+        if(player == 'r'){
+            AudioPlayer audioPlayer = new AudioPlayer("gamewin.wav", false);
+            audioPlayer.play();
+            JOptionPane.showMessageDialog(this,"红方获得胜利！", "游戏信息", JOptionPane.INFORMATION_MESSAGE);
+
+        }else {
+            AudioPlayer audioPlayer = new AudioPlayer("gamelose.wav", false);
+            audioPlayer.play();
+            JOptionPane.showMessageDialog(this, "黑方获得胜利","游戏信息",  JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     public StepTimer getStepTimer() {

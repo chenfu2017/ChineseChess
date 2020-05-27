@@ -9,6 +9,7 @@ import com.chenfu.control.GameController;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 public class SearchModel {
     private static int DEPTH;
@@ -110,7 +111,7 @@ public class SearchModel {
             ChessPiece chessPiece = stringPieceEntry.getValue();
             if (isMax && chessPiece.color == 'r') continue;
             if (!isMax && chessPiece.color == 'b') continue;
-            for (int[] nxt : Rules.getNextMove(chessPiece.key, chessPiece.position, chessBoard))
+            for (int[] nxt : Objects.requireNonNull(Rules.getNextMove(chessPiece.key, chessPiece.position, chessBoard)))
                 moves.add(new AlphaBetaNode(chessPiece.key, chessPiece.position, nxt));
         }
         return moves;

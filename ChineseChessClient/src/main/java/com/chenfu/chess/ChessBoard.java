@@ -1,5 +1,7 @@
 package com.chenfu.chess;
 
+import com.chenfu.utils.AudioPlayer;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,10 +83,9 @@ public class ChessBoard {
     public ChessPiece updatePiece(String key, int[] newPos) {
         ChessPiece orig = stringChessPieceMap.get(key);
         ChessPiece inNewPos = getPiece(newPos);
-        /* If the new slot has been taken by another piece, then it will be killed.*/
-        if (inNewPos != null)
+        if (inNewPos != null){
             stringChessPieceMap.remove(inNewPos.key);
-        /* Clear original slot and updatePiece new slot.*/
+        }
         int[] origPos = orig.position;
         chessPieceArray[origPos[0]][origPos[1]] = null;
         chessPieceArray[newPos[0]][newPos[1]] = orig;

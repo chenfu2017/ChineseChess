@@ -2,6 +2,7 @@ package com.chenfu.control;
 import com.chenfu.alogrithm.AlphaBetaNode;
 import com.chenfu.alogrithm.SearchModel;
 import com.chenfu.chess.ChessBoard;
+import com.chenfu.utils.AudioPlayer;
 import com.chenfu.view.GameView;
 
 public class GameController {
@@ -20,6 +21,15 @@ public class GameController {
     public int[] responseMoveChess(ChessBoard chessBoard, GameView gameView) {
         AlphaBetaNode result = searchModel.search(chessBoard);
         gameView.movePieceFromAI(result.piece, result.to);
+        int[] to = result.to;
+        boolean empty = chessBoard.isEmpty(to);
+        if(empty){
+            AudioPlayer audioPlayer = new AudioPlayer("go.wav",false);
+            audioPlayer.play();
+        }else {
+            AudioPlayer audioPlayer = new AudioPlayer("eat.wav",false);
+            audioPlayer.play();
+        }
         chessBoard.updatePiece(result.piece, result.to);
         return result.to;
     }

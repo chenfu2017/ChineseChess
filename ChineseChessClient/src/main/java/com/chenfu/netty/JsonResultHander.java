@@ -2,6 +2,8 @@ package com.chenfu.netty;
 
 import com.chenfu.inform.InformationBoard;
 import com.chenfu.pojo.JSONResult;
+import com.chenfu.pojo.Player;
+import com.chenfu.view.GameView;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -9,8 +11,20 @@ public class JsonResultHander extends SimpleChannelInboundHandler<JSONResult> {
 
     InformationBoard informationBoard= InformationBoard.getInstance();
 
+    private GameView gameView;
+
+    public JsonResultHander(GameView gameView) {
+        this.gameView = gameView;
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, JSONResult jsonResult) throws Exception {
-        informationBoard.AddLog(jsonResult.getMsg());
+        String msg = jsonResult.getMsg();
+        informationBoard.AddLog(msg);
+        if(jsonResult.getStatus()==200){
+            Player player =(Player)jsonResult.getData();
+            gameView.setPlayer(player);
+            gameView.getLoginMenu().setText("登录成功");
+        }
     }
 }

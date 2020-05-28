@@ -2,7 +2,10 @@ package com.chenfu.listener;
 
 import com.chenfu.chess.ChessBoard;
 import com.chenfu.inform.InformationBoard;
+import com.chenfu.netty.Client;
+import com.chenfu.pojo.DataContent;
 import com.chenfu.pojo.GameStatusEnum;
+import com.chenfu.pojo.MsgActionEnum;
 import com.chenfu.view.GameView;
 
 import java.awt.event.ActionEvent;
@@ -21,6 +24,11 @@ public class NewGameLister implements ActionListener {
     }
 
 
+/*    INIT(1, "初始状态"),
+    AI_NO_START(2, "人机模式就绪"),
+    AI_START(3, "人机已开始状态"),
+    NETWORK_MODE(4,"网络模式就绪"),
+    NETWORK_START(5, "网络匹配成功");*/
     @Override
     public void actionPerformed(ActionEvent e) {
         int status = gameView.status;
@@ -31,7 +39,13 @@ public class NewGameLister implements ActionListener {
                 gameView.newAIGame();
                 informationBoard.AddLog("重新开始！");break;
             case 4:
-                informationBoard.AddLog("please login!");break;
+                informationBoard.AddLog("匹配中,请稍后...");
+                Client instance = Client.getInstance();
+                DataContent dataContent = new DataContent();
+                dataContent.setAction(MsgActionEnum.NEWGAME.type);
+                dataContent.setObject(gameView.getPlayer());
+                instance.getChannel().writeAndFlush(dataContent);
+                break;
         }
     }
 }

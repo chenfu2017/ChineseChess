@@ -26,13 +26,15 @@ public class PlayerChannelRel {
         return playerManager.keySet();
     }
 
-    public static void removeByChannel(Channel channel){
+    public static Player removeByChannel(Channel channel){
         for (Map.Entry<Player,Channel> entry: playerManager.entrySet()) {
             if (entry.getValue() == channel) {
-                playerManager.remove(entry.getKey());
-                return;
+                Player player = entry.getKey();
+                playerManager.remove(player);
+                return entry.getKey();
             }
         }
+        return null;
     }
 
 }

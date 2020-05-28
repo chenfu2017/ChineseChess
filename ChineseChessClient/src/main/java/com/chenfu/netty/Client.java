@@ -22,18 +22,26 @@ public class Client {
         return SingletionClient.instance;
     }
 
-    private Client()  {
+    public GameView getGameView() {
+        return gameView;
+    }
+
+    public void connect(){
         group = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
-                .handler(new ClientInitialzer());
+                .handler(new ClientInitialzer(gameView));
         try {
             channel =bootstrap.connect("127.0.0.1",8888).sync().channel();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.err.println("netty client 启动完毕...");
+    }
+
+    public void setGameView(GameView gameView) {
+        this.gameView = gameView;
     }
 
     public  Channel getChannel() {

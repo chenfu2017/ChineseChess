@@ -1,6 +1,7 @@
 package com.chenfu.adapter;
 
 import com.chenfu.dialog.LoginDialog;
+import com.chenfu.netty.Client;
 import com.chenfu.view.GameView;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ public class LoginAdapter extends MouseAdapter {
     private GameView gameView;
     private JLabel jLabel;
     private Color foreground;
+    private Client client;
 
     public LoginAdapter(GameView gameView, JLabel jLabel) {
         this.gameView = gameView;
@@ -22,8 +24,15 @@ public class LoginAdapter extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        LoginDialog loginDialog = new LoginDialog();
-        loginDialog.showLoginDialog(gameView,jLabel);
+        try {
+            client = Client.getInstance();
+            client.setGameView(gameView);
+            client.connect();
+            LoginDialog loginDialog = new LoginDialog();
+            loginDialog.showLoginDialog(gameView,jLabel);
+        }catch (Throwable t){
+            gameView.getInformationBoard().AddLog("连接服务器失败！");
+        }
     }
 
     @Override

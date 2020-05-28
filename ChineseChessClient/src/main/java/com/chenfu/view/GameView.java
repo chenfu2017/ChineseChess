@@ -34,21 +34,20 @@ public class GameView extends JFrame{
     private final StepTimer stepTimer;
     private final TotalTimer totalTimer;
     private JLabel kuangLabel;
-    private static Player player;
+    private Player player;
+    private Player competitor;
+    private JLabel loginMenu;
+    public int status;
     /*0初始状态
     1人机开始状态
     2网络未登录
     3网络已登录
     4网络匹配成功
     5人机未开始状态*/
-    public int status;
-    private Client client;
-
     public GameView() {
         gameController = new GameController();
         chessBoard = new ChessBoard();
         jLayeredPane = this.getLayeredPane();
-        client = Client.getInstance();
         status = GameStatusEnum.INIT.status;
         //设置背景音乐
         audioPlayer = new AudioPlayer("bgm.wav", true);
@@ -108,12 +107,12 @@ public class GameView extends JFrame{
         //添加菜单
         Font font = new Font("宋体", Font.BOLD, 40);
         Color color = Color.blue;
-        JLabel menu1 = new JLabel("用户登录");
-        menu1.setFont(font);
-        menu1.setForeground(color);
-        menu1.setBounds(DefaultSet.menuX, DefaultSet.menuY, DefaultSet.menuWidth, DefaultSet.menuHeight);
-        menu1.addMouseListener(new LoginAdapter(this,menu1));
-        contentPanel.add(menu1);
+        loginMenu = new JLabel("用户登录");
+        loginMenu.setFont(font);
+        loginMenu.setForeground(color);
+        loginMenu.setBounds(DefaultSet.menuX, DefaultSet.menuY, DefaultSet.menuWidth, DefaultSet.menuHeight);
+        loginMenu.addMouseListener(new LoginAdapter(this, loginMenu));
+        contentPanel.add(loginMenu);
 
         JLabel menu2 = new JLabel("人机对战");
         menu2.setFont(font);
@@ -256,6 +255,14 @@ public class GameView extends JFrame{
         selectedPieceKey = null;
     }
 
+    public void setSquareLocation(int x,int y) {
+        if(status == GameStatusEnum.AI_START.status ){
+            getKuangLabel().setLocation(DefaultSet.SX_OFFSET + x * DefaultSet.SX_COE, DefaultSet.SY_OFFSET + y * DefaultSet.SY_COE);
+        }else {
+            informationBoard.AddLog("请选择游戏模式！");
+        }
+    }
+
     private int[] modelToViewConverter(int pos[]) {
         int sx = pos[1] * DefaultSet.SX_COE + DefaultSet.SX_OFFSET, sy = pos[0] * DefaultSet.SY_COE + DefaultSet.SY_OFFSET;
         return new int[]{sx, sy};
@@ -317,11 +324,15 @@ public class GameView extends JFrame{
         setSquareLocation(position[1],position[0]);
     }
 
-    public void setSquareLocation(int x,int y) {
-        if(status == GameStatusEnum.AI_START.status ){
-            getKuangLabel().setLocation(DefaultSet.SX_OFFSET + x * DefaultSet.SX_COE, DefaultSet.SY_OFFSET + y * DefaultSet.SY_COE);
-        }else {
-            informationBoard.AddLog("请选择游戏模式！");
-        }
+    public Player getCompetitor() {
+        return competitor;
+    }
+
+    public void setCompetitor(Player competitor) {
+        this.competitor = competitor;
+    }
+
+    public JLabel getLoginMenu() {
+        return loginMenu;
     }
 }

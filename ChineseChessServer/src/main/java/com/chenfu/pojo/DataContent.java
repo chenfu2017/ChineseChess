@@ -14,6 +14,18 @@ public class DataContent implements Serializable {
     private int action;
     private Object object;
 
+    public DataContent() {
+    }
+
+    public DataContent(Object object) {
+        this.object = object;
+    }
+
+    public DataContent(int action, Object object) {
+        this.action = action;
+        this.object = object;
+    }
+
     @Override
     public String toString() {
         return "DataContent{" +

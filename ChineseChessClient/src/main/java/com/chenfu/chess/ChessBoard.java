@@ -11,6 +11,7 @@ public class ChessBoard {
     private ChessPiece[][] chessPieceArray;
     public Map<String, ChessPiece> stringChessPieceMap;
     public char player;
+    public boolean inverse = false;
 
     public ChessBoard(char c) {
         initChessBoard(c);
@@ -55,6 +56,7 @@ public class ChessBoard {
         if(c=='r'){
             updateAll(stringChessPieceMap);
         }else {
+            inverse = true;
             inverseBoard();
         }
 

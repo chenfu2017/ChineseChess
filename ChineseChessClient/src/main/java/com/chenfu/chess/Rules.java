@@ -11,7 +11,11 @@ public class Rules {
     public static ArrayList<int[]> getNextMove(String piece, int[] pos, ChessBoard chessBoard) {
         Rules.pos = pos;
         Rules.chessBoard = chessBoard;
-        Rules.player = piece.charAt(0);
+        if(chessBoard.inverse){
+            Rules.player = piece.charAt(0)=='r'?'b':'r';
+        }else {
+            Rules.player = piece.charAt(0);
+        }
         switch (piece.charAt(1)) {
             case 'j':
                 return jRules();
@@ -32,6 +36,14 @@ public class Rules {
         }
     }
 
+    private static char getPieceColor(int[] location){
+        if(!chessBoard.inverse){
+            return chessBoard.getPiece(location).color;
+        }else {
+            return chessBoard.getPiece(location).color == 'r'?'b':'r';
+        }
+    }
+
     private static ArrayList<int[]> mRules() {
         ArrayList<int[]> moves = new ArrayList<int[]>();
         int[][] target = new int[][]{{1, -2}, {2, -1}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}};
@@ -41,8 +53,11 @@ public class Rules {
             int[] f = new int[]{pos[0] + obstacle[i][0], pos[1] + obstacle[i][1]};
             if (!chessBoard.isInside(e)) continue;
             if (chessBoard.isEmpty(f)) {
-                if (chessBoard.isEmpty(e)) moves.add(e);
-                else if (chessBoard.getPiece(e).color != player) moves.add(e);
+                if (chessBoard.isEmpty(e)){
+                    moves.add(e);
+                }else if(getPieceColor(e)!= player){
+                    moves.add(e);
+                }
             }
         }
         return moves;
@@ -55,7 +70,7 @@ public class Rules {
         for (int offset : yOffsets) {
             int[] rMove = new int[]{pos[0], pos[1] + offset};
             if (chessBoard.isEmpty(rMove)) moves.add(rMove);
-            else if (chessBoard.isInside(rMove) && chessBoard.getPiece(rMove).color != player) {
+            else if (chessBoard.isInside(rMove) && getPieceColor(rMove) != player) {
                 moves.add(rMove);
                 break;
             } else break;
@@ -63,7 +78,7 @@ public class Rules {
         for (int offset : yOffsets) {
             int[] lMove = new int[]{pos[0], pos[1] - offset};
             if (chessBoard.isEmpty(lMove)) moves.add(lMove);
-            else if (chessBoard.isInside(lMove) && chessBoard.getPiece(lMove).color != player) {
+            else if (chessBoard.isInside(lMove) && getPieceColor(lMove) != player) {
                 moves.add(lMove);
                 break;
             } else break;
@@ -71,7 +86,7 @@ public class Rules {
         for (int offset : xOffsets) {
             int[] uMove = new int[]{pos[0] - offset, pos[1]};
             if (chessBoard.isEmpty(uMove)) moves.add(uMove);
-            else if (chessBoard.isInside(uMove) && chessBoard.getPiece(uMove).color != player) {
+            else if (chessBoard.isInside(uMove) && getPieceColor(uMove) != player) {
                 moves.add(uMove);
                 break;
             } else break;
@@ -79,7 +94,7 @@ public class Rules {
         for (int offset : xOffsets) {
             int[] dMove = new int[]{pos[0] + offset, pos[1]};
             if (chessBoard.isEmpty(dMove)) moves.add(dMove);
-            else if (chessBoard.isInside(dMove) && chessBoard.getPiece(dMove).color != player) {
+            else if (chessBoard.isInside(dMove) && getPieceColor(dMove) != player) {
                 moves.add(dMove);
                 break;
             } else break;
@@ -100,7 +115,7 @@ public class Rules {
                 if (e) moves.add(rMove);
                 else rr = true;
             } else if (!e) {
-                if (chessBoard.getPiece(rMove).color != player) moves.add(rMove);
+                if (getPieceColor(rMove) != player) moves.add(rMove);
                 break;
             }
         }
@@ -112,7 +127,7 @@ public class Rules {
                 if (e) moves.add(lMove);
                 else ll = true;
             } else if (!e) {
-                if (chessBoard.getPiece(lMove).color != player) {
+                if (getPieceColor(lMove) != player) {
                     moves.add(lMove);
                 }
                 break;
@@ -126,7 +141,7 @@ public class Rules {
                 if (e) moves.add(uMove);
                 else uu = true;
             } else if (!e) {
-                if (chessBoard.getPiece(uMove).color != player) moves.add(uMove);
+                if (getPieceColor(uMove) != player) moves.add(uMove);
                 break;
             }
         }
@@ -138,7 +153,7 @@ public class Rules {
                 if (e) moves.add(dMove);
                 else dd = true;
             } else if (!e) {
-                if (chessBoard.getPiece(dMove).color != player) moves.add(dMove);
+                if (getPieceColor(dMove) != player) moves.add(dMove);
                 break;
             }
         }
@@ -155,7 +170,7 @@ public class Rules {
             if (!chessBoard.isInside(e) || (e[0] > 4 && player == 'b') || (e[0] < 5 && player == 'r')) continue;
             if (chessBoard.isEmpty(f)) {
                 if (chessBoard.isEmpty(e)) moves.add(e);
-                else if (chessBoard.getPiece(e).color != player) moves.add(e);
+                else if (getPieceColor(e) != player) moves.add(e);
             }
         }
         return moves;
@@ -169,7 +184,7 @@ public class Rules {
             if (!chessBoard.isInside(e) || ((e[0] > 2 || e[1] < 3 || e[1] > 5) && player == 'b') || ((e[0] < 7 || e[1] < 3 || e[1] > 5) && player == 'r'))
                 continue;
             if (chessBoard.isEmpty(e)) moves.add(e);
-            else if (chessBoard.getPiece(e).color != player) moves.add(e);
+            else if (getPieceColor(e) != player) moves.add(e);
         }
         return moves;
     }
@@ -183,7 +198,7 @@ public class Rules {
             if (!chessBoard.isInside(e) || ((e[0] > 2 || e[1] < 3 || e[1] > 5) && player == 'b') || ((e[0] < 7 || e[1] < 3 || e[1] > 5) && player == 'r'))
                 continue;
             if (chessBoard.isEmpty(e)) moves.add(e);
-            else if (chessBoard.getPiece(e).color != player) moves.add(e);
+            else if (getPieceColor(e) != player) moves.add(e);
         }
         /* opposite 'b' */
         boolean flag = true;
@@ -208,13 +223,13 @@ public class Rules {
             if (pos[0] > 4) {
                 int[] e = new int[]{pos[0] - 1, pos[1]};
                 if (chessBoard.isEmpty(e)) moves.add(e);
-                else if (chessBoard.getPiece(e).color != player) moves.add(e);
+                else if (getPieceColor(e) != player) moves.add(e);
             } else {
                 for (int[] aTarget : targetU) {
                     int[] e = new int[]{pos[0] + aTarget[0], pos[1] + aTarget[1]};
                     if (!chessBoard.isInside(e)) continue;
                     if (chessBoard.isEmpty(e)) moves.add(e);
-                    else if (chessBoard.getPiece(e).color != player) moves.add(e);
+                    else if (getPieceColor(e)!= player) moves.add(e);
                 }
             }
         }
@@ -222,13 +237,13 @@ public class Rules {
             if (pos[0] < 5) {
                 int[] e = new int[]{pos[0] + 1, pos[1]};
                 if (chessBoard.isEmpty(e)) moves.add(e);
-                else if (chessBoard.getPiece(e).color != player) moves.add(e);
+                else if (getPieceColor(e) != player) moves.add(e);
             } else {
                 for (int[] aTarget : targetD) {
                     int[] e = new int[]{pos[0] + aTarget[0], pos[1] + aTarget[1]};
                     if (!chessBoard.isInside(e)) continue;
                     if (chessBoard.isEmpty(e)) moves.add(e);
-                    else if (chessBoard.getPiece(e).color != player) moves.add(e);
+                    else if (getPieceColor(e) != player) moves.add(e);
                 }
             }
         }

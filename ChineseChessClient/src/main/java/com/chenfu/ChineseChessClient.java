@@ -6,7 +6,5 @@ public class ChineseChessClient {
 
     public static void main(String[] args) throws InterruptedException {
         GameView gameView =new GameView();
-        gameView.run();
     }
-
 }

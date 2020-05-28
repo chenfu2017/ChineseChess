@@ -12,13 +12,13 @@ public class ChessBoard {
     public Map<String, ChessPiece> stringChessPieceMap;
     public char player;
 
-    public ChessBoard() {
-        initChessBoard();
+    public ChessBoard(char c) {
+        initChessBoard(c);
     }
 
-    public void initChessBoard(){
+    public void initChessBoard(char c){
         chessPieceArray = new ChessPiece[BOARD_HEIGHT][BOARD_WIDTH];
-        player = 'r';
+        player = c;
         stringChessPieceMap = new HashMap<>();
         stringChessPieceMap.put("bj0", new ChessPiece("bj0", new int[]{0, 0}));
         stringChessPieceMap.put("bm0", new ChessPiece("bm0", new int[]{0, 1}));
@@ -52,7 +52,12 @@ public class ChessBoard {
         stringChessPieceMap.put("rz2", new ChessPiece("rz2", new int[]{6, 4}));
         stringChessPieceMap.put("rz3", new ChessPiece("rz3", new int[]{6, 6}));
         stringChessPieceMap.put("rz4", new ChessPiece("rz4", new int[]{6, 8}));
-        for (Map.Entry<String, ChessPiece> stringPieceEntry : stringChessPieceMap.entrySet()) update(stringPieceEntry.getValue());
+        if(c=='r'){
+            updateAll(stringChessPieceMap);
+        }else {
+            inverseBoard();
+        }
+
     }
 
 
@@ -80,6 +85,10 @@ public class ChessBoard {
         return true;
     }
 
+    public void updateAll(Map<String, ChessPiece> stringChessPieceMap) {
+        for (Map.Entry<String, ChessPiece> stringPieceEntry : stringChessPieceMap.entrySet()) update(stringPieceEntry.getValue());
+    }
+
     public ChessPiece updatePiece(String key, int[] newPos) {
         ChessPiece orig = stringChessPieceMap.get(key);
         ChessPiece inNewPos = getPiece(newPos);
@@ -100,7 +109,19 @@ public class ChessBoard {
         return true;
     }
 
+    public void inverseBoard(){
+        for (Map.Entry<String, ChessPiece> stringPieceEntry : stringChessPieceMap.entrySet()) {
+            ChessPiece chessPiece = stringPieceEntry.getValue();
+            int[] position = chessPiece.position;
+            int[] inversePosition= {BOARD_HEIGHT-1-position[0],BOARD_WIDTH-1-position[1]};
+            chessPiece.position = inversePosition;
+            update(chessPiece);
+            System.out.println(stringPieceEntry.getKey() + ": " + chessPiece.position[1] + ','+ chessPiece.position[0]);
+        }
+    }
+
     public void printBoard() {
+
         for (Map.Entry<String, ChessPiece> stringPieceEntry : stringChessPieceMap.entrySet()) {
             ChessPiece chessPiece = stringPieceEntry.getValue();
             System.out.println(stringPieceEntry.getKey() + ": " + chessPiece.position[1] + ','+ chessPiece.position[0]);

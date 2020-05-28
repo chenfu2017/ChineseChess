@@ -42,7 +42,6 @@ public class PieceOnClickListener extends MouseAdapter {
                     gameView.movePieceFromModel(gameView.selectedPieceKey, pos);
                     break;
                 }
-
             }
         } else if (key.charAt(0) == chessBoard.player) {
             AudioPlayer audioPlayer = new AudioPlayer("select.wav", false);

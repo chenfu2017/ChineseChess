@@ -38,6 +38,7 @@ public class GameView extends JFrame{
     private Player competitor;
     private JLabel loginMenu;
     public int status;
+
     /*0初始状态
     1人机开始状态
     2网络未登录
@@ -46,7 +47,7 @@ public class GameView extends JFrame{
     5人机未开始状态*/
     public GameView() {
         gameController = new GameController();
-        chessBoard = new ChessBoard();
+        chessBoard = new ChessBoard('r');
         jLayeredPane = this.getLayeredPane();
         status = GameStatusEnum.INIT.status;
         //设置背景音乐
@@ -118,7 +119,7 @@ public class GameView extends JFrame{
         menu2.setFont(font);
         menu2.setForeground(color);
         menu2.setBounds(DefaultSet.menuX, DefaultSet.menuY+ DefaultSet.menuP, DefaultSet.menuWidth, DefaultSet.menuHeight);
-        menu2.addMouseListener(new AIModeAdapter(this, informationBoard,menu2));
+        menu2.addMouseListener(new AIModeAdapter(this, chessBoard,gameController,menu2));
         contentPanel.add(menu2);
 
         JLabel menu3 = new JLabel("网络对战");
@@ -209,6 +210,7 @@ public class GameView extends JFrame{
             int[]pos= gameController.responseMoveChess(chessBoard, this);
             getKuangLabel().setLocation(DefaultSet.SX_OFFSET + pos[1] * DefaultSet.SX_COE, DefaultSet.SY_OFFSET + pos[0] * DefaultSet.SY_COE);
             getStepTimer().reStart();
+            chessBoard.printBoard();
             if (gameController.hasWin(chessBoard) == 'b'){
                 showWinner('b');
             }
@@ -216,8 +218,8 @@ public class GameView extends JFrame{
     }
 
 
-    public void newAIGame(){
-        chessBoard.initChessBoard();
+    public void newGame(char c){
+        chessBoard.initChessBoard(c);
         Map<String, ChessPiece> stringChessPieceMap = chessBoard.stringChessPieceMap;
         for (Map.Entry<String, ChessPiece> stringPieceEntry : stringChessPieceMap.entrySet()) {
             String key = stringPieceEntry.getKey();
@@ -256,10 +258,10 @@ public class GameView extends JFrame{
     }
 
     public void setSquareLocation(int x,int y) {
-        if(status == GameStatusEnum.AI_START.status ){
+        if(status == GameStatusEnum.AI_START.status || status == GameStatusEnum.NETWORK_START.status){
             getKuangLabel().setLocation(DefaultSet.SX_OFFSET + x * DefaultSet.SX_COE, DefaultSet.SY_OFFSET + y * DefaultSet.SY_COE);
         }else {
-            informationBoard.AddLog("请选择游戏模式！");
+            informationBoard.AddLog("GameView:请选择游戏模式！");
         }
     }
 

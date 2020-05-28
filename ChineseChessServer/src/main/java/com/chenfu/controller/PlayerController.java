@@ -1,5 +1,6 @@
 package com.chenfu.controller;
 
+import com.chenfu.netty.CounterpartManager;
 import com.chenfu.pojo.Player;
 import com.chenfu.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,13 @@ public class PlayerController {
     private PlayerService playerService;
 
     @RequestMapping("/showOnline")
-    private Set<Player> getOnlinePolices() {
+    private Set<Player> getOnlinePlayers() {
         return playerService.getOnlinePlayers();
     }
+
+    @RequestMapping("/initNoMatchPlayer")
+    private void clearOnlinePlayers(){
+        CounterpartManager.initNoMatchPlayer();
+    }
+
 }

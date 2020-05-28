@@ -45,7 +45,7 @@ public class BoardClickListener extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(gameView.status == GameStatusEnum.AI_START.status){
+        if(gameView.status == GameStatusEnum.AI_START.status || gameView.status == GameStatusEnum.NETWORK_START.status){
             if (gameView.selectedPieceKey != null) {
                 int[] sPos = new int[]{e.getXOnScreen() - gameView.getX(), e.getYOnScreen() - gameView.getY()};
                 int[] pos = viewToModelConverter(sPos);
@@ -64,7 +64,7 @@ public class BoardClickListener extends MouseAdapter {
                 }
             }
         }else {
-            gameView.getInformationBoard().AddLog("请选择模式！");
+            gameView.getInformationBoard().AddLog("BoardClick:请选择模式！");
         }
 
     }

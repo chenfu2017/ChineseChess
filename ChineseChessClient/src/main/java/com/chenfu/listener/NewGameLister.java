@@ -4,7 +4,6 @@ import com.chenfu.chess.ChessBoard;
 import com.chenfu.inform.InformationBoard;
 import com.chenfu.netty.Client;
 import com.chenfu.pojo.DataContent;
-import com.chenfu.pojo.GameStatusEnum;
 import com.chenfu.pojo.MsgActionEnum;
 import com.chenfu.view.GameView;
 
@@ -36,7 +35,7 @@ public class NewGameLister implements ActionListener {
             case 1:informationBoard.AddLog("请选择游戏模式！");break;
             case 2:
             case 3:
-                gameView.newAIGame();
+                gameView.newGame('r');
                 informationBoard.AddLog("重新开始！");break;
             case 4:
                 informationBoard.AddLog("匹配中,请稍后...");

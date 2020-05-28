@@ -24,6 +24,11 @@ public class CounterpartManager {
         return counterpartManager.get(player);
     }
 
+    public static void initNoMatchPlayer(){
+        counterpartManager.clear();
+        Set<Player> onlinePlayers = PlayerChannelRel.getOnlinePlayers();
+        noMatchPlayer.addAll(onlinePlayers);
+    }
 
 
     public static Player match(Player player){

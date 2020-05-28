@@ -1,5 +1,8 @@
 package com.chenfu.adapter;
 
+import com.chenfu.chess.AImodeThread;
+import com.chenfu.chess.ChessBoard;
+import com.chenfu.control.GameController;
 import com.chenfu.view.GameView;
 import com.chenfu.pojo.GameStatusEnum;
 import com.chenfu.inform.InformationBoard;
@@ -11,15 +14,17 @@ import java.awt.event.MouseEvent;
 public class AIModeAdapter extends MouseAdapter {
 
     private GameView gameView;
-    private InformationBoard informationBoard;
+    private ChessBoard chessBoard;
+    private GameController gameController;
     private JLabel jLabel;
     private Color foreground;
 
-    public AIModeAdapter(GameView gameView, InformationBoard informationBoard, JLabel jLabel) {
+    public AIModeAdapter(GameView gameView, ChessBoard chessBoard, GameController gameController, JLabel jLabel) {
         this.gameView = gameView;
-        this.informationBoard = informationBoard;
+        this.chessBoard = chessBoard;
+        this.gameController = gameController;
         this.jLabel = jLabel;
-        this.foreground = jLabel.getForeground();
+        foreground = jLabel.getForeground();
     }
 
     @Override
@@ -35,6 +40,7 @@ public class AIModeAdapter extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         gameView.status = GameStatusEnum.AI_START.status;
-        informationBoard.AddLog("AI combat mode selected!");
+        gameView.getInformationBoard().AddLog("AI combat mode selected!");
+        new Thread(new AImodeThread(gameView,chessBoard,gameController)).start();
     }
 }

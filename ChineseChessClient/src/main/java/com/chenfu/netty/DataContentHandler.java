@@ -35,7 +35,10 @@ public class DataContentHandler extends SimpleChannelInboundHandler<DataContent>
                 gameView.setCompetitor(competitor);
                 gameView.status = GameStatusEnum.NETWORK_START.status;
                 gameView.getInformationBoard().AddLog("匹配成功！");
-                System.out.println(competitor);
+                char c = competitor.getPassword().charAt(0);
+                gameView.newGame(c);
+                gameView.showPlayer(c);
+                gameView.repaint();
         }
     }
 }

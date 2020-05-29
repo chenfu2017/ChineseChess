@@ -55,6 +55,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<DataContent> {
         int action = dataContent.getAction();
         Object object = dataContent.getObject();
         Player player = null;
+        Channel channel = null;
         JSONResult jsonResult = null;
         if (object instanceof Player) {
             player = (Player) object;
@@ -70,6 +71,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<DataContent> {
                     clients.add(currentChannel);
                 }
                 currentChannel.writeAndFlush(jsonResult);
+                break;
+            case 2:
+                ChatMsg chatMsg = (ChatMsg)object;
+                channel = PlayerChannelRel.getChannel(chatMsg.getUsername());
+                channel.writeAndFlush(dataContent);
                 break;
             case 6:
                 Player competitor = CounterpartManager.match(player);
@@ -91,14 +97,14 @@ public class ServerHandler extends SimpleChannelInboundHandler<DataContent> {
                     dataContent.setObject(competitor);
                     currentChannel.writeAndFlush(dataContent);
 
-                    Channel channel = PlayerChannelRel.getChannel(competitor.getUsername());
+                    channel = PlayerChannelRel.getChannel(competitor.getUsername());
                     dataContent.setObject(player);
                     channel.writeAndFlush(dataContent);
                 }
                 break;
             case 7:
                 PieceMsg pieceMsg = (PieceMsg) dataContent.getObject();
-                Channel channel = PlayerChannelRel.getChannel(pieceMsg.getUsername());
+                channel = PlayerChannelRel.getChannel(pieceMsg.getUsername());
                 channel.writeAndFlush(dataContent);
                 break;
         }

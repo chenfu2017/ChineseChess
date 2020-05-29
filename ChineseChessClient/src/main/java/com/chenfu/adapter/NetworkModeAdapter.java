@@ -1,9 +1,8 @@
 package com.chenfu.adapter;
 
-import com.chenfu.netty.Client;
 import com.chenfu.view.GameView;
 import com.chenfu.pojo.GameStatusEnum;
-import com.chenfu.inform.InformationBoard;
+import com.chenfu.components.InformationBoard;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,10 +37,10 @@ public class NetworkModeAdapter extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         if(gameView.getPlayer()==null){
-            informationBoard.AddLog("please login!");
+            informationBoard.addLog("please login!");
         }else {
             gameView.status = GameStatusEnum.NETWORK_MODE.status;
-            informationBoard.AddLog("Network battle mode selected!");
+            informationBoard.addLog("Network battle mode selected!");
         }
     }
 }

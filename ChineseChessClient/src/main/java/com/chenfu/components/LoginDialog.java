@@ -1,11 +1,10 @@
-package com.chenfu.dialog;
+package com.chenfu.components;
 
 import com.chenfu.netty.Client;
-import com.chenfu.panel.LoginPanel;
+import com.chenfu.components.LoginPanel;
 import com.chenfu.pojo.DataContent;
 import com.chenfu.pojo.MsgActionEnum;
 import com.chenfu.pojo.Player;
-import io.netty.channel.Channel;
 
 import javax.swing.*;
 import java.awt.*;

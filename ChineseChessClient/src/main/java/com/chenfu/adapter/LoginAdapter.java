@@ -1,6 +1,6 @@
 package com.chenfu.adapter;
 
-import com.chenfu.dialog.LoginDialog;
+import com.chenfu.components.LoginDialog;
 import com.chenfu.netty.Client;
 import com.chenfu.view.GameView;
 
@@ -31,7 +31,7 @@ public class LoginAdapter extends MouseAdapter {
             LoginDialog loginDialog = new LoginDialog();
             loginDialog.showLoginDialog(gameView,jLabel);
         }catch (Throwable t){
-            gameView.getInformationBoard().AddLog("连接服务器失败！");
+            gameView.getInformationBoard().addLog("连接服务器失败！");
         }
     }
 

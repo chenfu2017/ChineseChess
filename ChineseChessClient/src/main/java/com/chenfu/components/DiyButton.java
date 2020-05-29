@@ -1,4 +1,4 @@
-package com.chenfu.button;
+package com.chenfu.components;
 
 import com.chenfu.utils.ResourceUtils;
 import javax.swing.*;
@@ -8,8 +8,9 @@ public class DiyButton extends JButton {
 
     private Font buttonFont;
     private ImageIcon imageIcon;
-    public DiyButton(String text,int x,int y) {
-        imageIcon = ResourceUtils.getImageIcon("button.png");
+
+    public DiyButton(String text,int x,int y,String filename) {
+        imageIcon = ResourceUtils.getImageIcon(filename);
         buttonFont = new Font("宋体", Font.BOLD, 20);
         this.setBounds(x,y,imageIcon.getIconWidth(),imageIcon.getIconHeight());
         this.setFont(buttonFont);

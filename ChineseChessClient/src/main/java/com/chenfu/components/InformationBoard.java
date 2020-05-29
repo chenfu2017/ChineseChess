@@ -1,7 +1,6 @@
-package com.chenfu.inform;
+package com.chenfu.components;
 
 import com.chenfu.DefaultSet;
-import com.chenfu.netty.Client;
 import com.chenfu.utils.ResourceUtils;
 
 import javax.swing.*;
@@ -62,7 +61,7 @@ public class InformationBoard extends JPanel {
         g.drawImage(bufferedImage, 0, 0, null);
     }
 
-    public String AddLog(String s) {
+    public String addLog(String s) {
         //记录数据后添加一行
         log.append(s + "\n");
         //原记录小于10行的处理

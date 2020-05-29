@@ -7,11 +7,11 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AskdrawLister implements ActionListener {
+public class AskdrawListener implements ActionListener {
 
     private GameView gameView;
 
-    public AskdrawLister(GameView gameView) {
+    public AskdrawListener(GameView gameView) {
         this.gameView = gameView;
     }
 

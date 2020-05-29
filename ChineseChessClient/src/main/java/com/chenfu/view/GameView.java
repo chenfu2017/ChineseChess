@@ -1,14 +1,15 @@
 package com.chenfu.view;
 
 import com.chenfu.DefaultSet;
-import com.chenfu.inform.InformationBoard;
+import com.chenfu.components.InformationBoard;
 import com.chenfu.adapter.*;
-import com.chenfu.button.DiyButton;
+import com.chenfu.components.DiyButton;
+import com.chenfu.listener.SendListener;
 import com.chenfu.netty.Client;
 import com.chenfu.pojo.*;
 import com.chenfu.control.GameController;
-import com.chenfu.listener.AskdrawLister;
-import com.chenfu.listener.NewGameLister;
+import com.chenfu.listener.AskdrawListener;
+import com.chenfu.listener.NewGameListener;
 import com.chenfu.timer.JudgeTimer;
 import com.chenfu.timer.StepTimer;
 import com.chenfu.timer.TotalTimer;
@@ -93,20 +94,29 @@ public class GameView extends JFrame {
         jPanel.add(informationBoard);
 
         //添加按钮
-        DiyButton diyButton1 = new DiyButton("新对局", DefaultSet.buttonX, DefaultSet.buttonY);
-        diyButton1.addActionListener(new NewGameLister(this, chessBoard, informationBoard));
+        DiyButton diyButton1 = new DiyButton("新对局", DefaultSet.buttonX, DefaultSet.buttonY, "button.png");
+        diyButton1.addActionListener(new NewGameListener(this, chessBoard, informationBoard));
         jPanel.add(diyButton1);
 
-        DiyButton diyButton2 = new DiyButton("悔棋", DefaultSet.buttonX + DefaultSet.buttonP, DefaultSet.buttonY);
+        DiyButton diyButton2 = new DiyButton("悔棋", DefaultSet.buttonX + DefaultSet.buttonP, DefaultSet.buttonY, "button.png");
         jPanel.add(diyButton2);
 
-        DiyButton diyButton3 = new DiyButton("求和", DefaultSet.buttonX + DefaultSet.buttonP * 2, DefaultSet.buttonY);
-        diyButton3.addActionListener(new AskdrawLister(this));
+        DiyButton diyButton3 = new DiyButton("求和", DefaultSet.buttonX + DefaultSet.buttonP * 2, DefaultSet.buttonY, "button.png");
+        diyButton3.addActionListener(new AskdrawListener(this));
         jPanel.add(diyButton3);
 
-        DiyButton diyButton4 = new DiyButton("认输", DefaultSet.buttonX + DefaultSet.buttonP * 3, DefaultSet.buttonY);
+        DiyButton diyButton4 = new DiyButton("认输", DefaultSet.buttonX + DefaultSet.buttonP * 3, DefaultSet.buttonY, "button.png");
         jPanel.add(diyButton4);
 
+
+        JTextField jTextField = new JTextField();
+        jTextField.setBounds( DefaultSet.textFieldX, DefaultSet.textFieleY, DefaultSet.textFieldWidth, DefaultSet.textFieleHeight);
+        jTextField.setFont(new Font("黑体",Font.BOLD, 15));
+        jPanel.add(jTextField);
+
+        DiyButton diyButton5 = new DiyButton("", DefaultSet.sendButtonX, DefaultSet.sendButtonY, "send4.png");
+        diyButton5.addActionListener(new SendListener(this,jTextField));
+        jPanel.add(diyButton5);
         //添加菜单
         Font font = new Font("宋体", Font.BOLD, 40);
         Color color = Color.blue;
@@ -189,17 +199,17 @@ public class GameView extends JFrame {
         totaltimerLabel.setFont(new Font("华文行楷", Font.CENTER_BASELINE, 28));
         totaltimerLabel.setForeground(Color.RED);
         jPanel.add(totaltimerLabel);
-        totalTimer = new TotalTimer(totaltimerLabel);
+        totalTimer = new TotalTimer(this,totaltimerLabel);
 
         JLabel timerLabel = new JLabel();
         timerLabel.setBounds(DefaultSet.timerLabelX, DefaultSet.timerLabelY + DefaultSet.timerLabelP, DefaultSet.timerLabelWidth, DefaultSet.timerLabelHeight);
         timerLabel.setFont(new Font("华文行楷", Font.CENTER_BASELINE, 28));
         timerLabel.setForeground(Color.RED);
         jPanel.add(timerLabel);
-        stepTimer = new StepTimer(timerLabel);
+        stepTimer = new StepTimer(this,timerLabel);
         this.setVisible(true);
 
-        judgeTimer = new JudgeTimer(this,chessBoard,gameController);
+        judgeTimer = new JudgeTimer(this, chessBoard, gameController);
     }
 
     public void newGame(char c) {
@@ -216,7 +226,7 @@ public class GameView extends JFrame {
         }
         stepTimer.start();
         totalTimer.start();
-        if(status == GameStatusEnum.NETWORK_START.status){
+        if (status == GameStatusEnum.NETWORK_START.status) {
             judgeTimer.start();
         }
         setSquareLocation(-5, -5);
@@ -228,13 +238,13 @@ public class GameView extends JFrame {
         return inversePosition;
     }
 
-    public void movePieceFromModel(String pieceKey, int[] to,boolean send) {
+    public void movePieceFromModel(String pieceKey, int[] to, boolean send) {
         chessBoard.updatePiece(pieceKey, to);
         JLabel pieceObject = stringJLabelMap.get(pieceKey);
         int[] despos = modelToViewConverter(to);
         pieceObject.setLocation(despos[0], despos[1]);
         selectedPieceKey = null;
-        if (send==true) {
+        if (send == true) {
             Channel channel = Client.getInstance().getChannel();
             ChessPiece chessPiece = pieces.get(pieceKey);
             PieceMsg pieceMsg = new PieceMsg(competitor.getUsername(), pieceKey, inversePos(chessPiece.position), inversePos(to));
@@ -262,7 +272,7 @@ public class GameView extends JFrame {
         if (status == GameStatusEnum.AI_START.status || status == GameStatusEnum.NETWORK_START.status) {
             getKuangLabel().setLocation(DefaultSet.SX_OFFSET + x * DefaultSet.SX_COE, DefaultSet.SY_OFFSET + y * DefaultSet.SY_COE);
         } else {
-            informationBoard.AddLog("GameView:请选择游戏模式！");
+            informationBoard.addLog("GameView:请选择游戏模式！");
         }
     }
 
@@ -286,9 +296,13 @@ public class GameView extends JFrame {
         if (player == 'r') {
             AudioPlayer audioPlayer = new AudioPlayer("gamewin.wav", false);
             audioPlayer.play();
+            getTotalTimer().stop();
+            getStepTimer().stop();
             JOptionPane.showMessageDialog(this, "红方获得胜利！", "游戏信息", JOptionPane.INFORMATION_MESSAGE);
             return true;
-        } else if(player == 'b'){
+        } else if (player == 'b') {
+            getTotalTimer().stop();
+            getStepTimer().stop();
             AudioPlayer audioPlayer = new AudioPlayer("gamelose.wav", false);
             audioPlayer.play();
             JOptionPane.showMessageDialog(this, "黑方获得胜利", "游戏信息", JOptionPane.INFORMATION_MESSAGE);

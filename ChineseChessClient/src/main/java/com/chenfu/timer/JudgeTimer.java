@@ -11,6 +11,9 @@ public class JudgeTimer {
     private GameView gameView;
     private ChessBoard chessBoard;
     private GameController gameController;
+    private Timer timer;
+    private StepTimer stepTimer;
+    private TotalTimer totalTimer;
 
 
     public JudgeTimer(GameView gameView, ChessBoard chessBoard, GameController gameController) {
@@ -20,7 +23,7 @@ public class JudgeTimer {
     }
 
     public void start() {
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -44,5 +47,9 @@ public class JudgeTimer {
                 }
             }
         },0,1000);
+    }
+
+    public void stop(){
+        timer.cancel();
     }
 }

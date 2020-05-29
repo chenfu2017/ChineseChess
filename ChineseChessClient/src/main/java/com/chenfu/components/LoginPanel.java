@@ -1,4 +1,4 @@
-package com.chenfu.panel;
+package com.chenfu.components;
 
 import com.chenfu.utils.ResourceUtils;
 

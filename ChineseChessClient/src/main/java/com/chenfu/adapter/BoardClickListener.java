@@ -1,13 +1,12 @@
 package com.chenfu.adapter;
 
-import com.chenfu.DefaultSet;
 import com.chenfu.pojo.ChessBoard;
 import com.chenfu.alogrithm.Rules;
 import com.chenfu.control.GameController;
 import com.chenfu.pojo.GameStatusEnum;
 import com.chenfu.utils.AudioPlayer;
 import com.chenfu.view.GameView;
-import javax.swing.*;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
@@ -68,7 +67,7 @@ public class BoardClickListener extends MouseAdapter {
                 }
             }
         } else {
-            gameView.getInformationBoard().AddLog("BoardClick:请选择模式！");
+            gameView.getInformationBoard().addLog("BoardClick:请选择模式！");
         }
 
     }

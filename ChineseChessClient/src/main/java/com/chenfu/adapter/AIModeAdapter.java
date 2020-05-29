@@ -1,11 +1,11 @@
 package com.chenfu.adapter;
 
-import com.chenfu.chess.AImodeThread;
-import com.chenfu.chess.ChessBoard;
+import com.chenfu.alogrithm.AImodeThread;
+import com.chenfu.pojo.ChessBoard;
 import com.chenfu.control.GameController;
 import com.chenfu.view.GameView;
 import com.chenfu.pojo.GameStatusEnum;
-import com.chenfu.inform.InformationBoard;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -39,8 +39,10 @@ public class AIModeAdapter extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        gameView.status = GameStatusEnum.AI_START.status;
-        gameView.getInformationBoard().AddLog("AI combat mode selected!");
-        new Thread(new AImodeThread(gameView,chessBoard,gameController)).start();
+        if(gameView.status != GameStatusEnum.NETWORK_START.status){
+            gameView.status = GameStatusEnum.AI_START.status;
+            gameView.getInformationBoard().AddLog("AI combat mode selected!");
+            new Thread(new AImodeThread(gameView,chessBoard,gameController)).start();
+        }
     }
 }

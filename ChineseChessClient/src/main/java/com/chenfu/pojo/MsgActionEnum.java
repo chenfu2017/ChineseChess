@@ -10,7 +10,8 @@ public enum MsgActionEnum {
     WITHDRAW(3,"悔棋"),
     ASKDRAW(4,"求和"),
     GIVEUP(5,"认输"),
-    NEWGAME(6,"新游戏");*/
+    NEWGAME(6,"新游戏"),
+    PIECELPOS(7,"棋子信息");*/
 
 
     LOGIN(1, "用户登录"),
@@ -18,7 +19,8 @@ public enum MsgActionEnum {
     WITHDRAW(3,"悔棋"),
     ASKDRAW(4,"求和"),
     GIVEUP(5, "认输"),
-    NEWGAME(6, "新游戏");
+    NEWGAME(6, "新游戏"),
+    PIECELPOS(7,"棋子信息");
 
     public final Integer type;
     public final String content;

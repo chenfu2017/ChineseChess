@@ -1,4 +1,6 @@
-package com.chenfu.chess;
+package com.chenfu.alogrithm;
+
+import com.chenfu.pojo.ChessBoard;
 
 import java.util.ArrayList;
 

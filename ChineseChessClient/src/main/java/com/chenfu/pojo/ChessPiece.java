@@ -1,4 +1,4 @@
-package com.chenfu.chess;
+package com.chenfu.pojo;
 
 
 public class ChessPiece implements Cloneable {
@@ -15,5 +15,4 @@ public class ChessPiece implements Cloneable {
         this.index = name.charAt(2);
         this.position = position;
     }
-
 }

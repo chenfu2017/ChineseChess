@@ -1,7 +1,7 @@
 package com.chenfu.control;
 import com.chenfu.alogrithm.AlphaBetaNode;
 import com.chenfu.alogrithm.SearchModel;
-import com.chenfu.chess.ChessBoard;
+import com.chenfu.pojo.ChessBoard;
 import com.chenfu.utils.AudioPlayer;
 import com.chenfu.view.GameView;
 
@@ -11,10 +11,6 @@ public class GameController {
 
     public GameController() {
         searchModel = new SearchModel(this);
-    }
-
-    public void moveChess(String key, int[] position, ChessBoard chessBoard) {
-        chessBoard.updatePiece(key, position);
     }
 
 

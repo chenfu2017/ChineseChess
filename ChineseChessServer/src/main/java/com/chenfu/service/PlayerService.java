@@ -10,7 +10,9 @@ import java.util.Set;
 public interface PlayerService {
     List<Player> getAll();
 
+    Player getPlayerByUsername(String username);
+
     JSONResult login(String username, String password);
 
-    Set<Player> getOnlinePlayers();
+    Set<String> getOnlinePlayers();
 }

@@ -1,6 +1,7 @@
-package com.chenfu.chess;
+package com.chenfu.alogrithm;
 
 import com.chenfu.DefaultSet;
+import com.chenfu.pojo.ChessBoard;
 import com.chenfu.control.GameController;
 import com.chenfu.view.GameView;
 
@@ -36,7 +37,6 @@ public class AImodeThread implements Runnable{
             int[]pos= gameController.responseMoveChess(chessBoard, gameView);
             gameView.getKuangLabel().setLocation(DefaultSet.SX_OFFSET + pos[1] * DefaultSet.SX_COE, DefaultSet.SY_OFFSET + pos[0] * DefaultSet.SY_COE);
             gameView.getStepTimer().reStart();
-            chessBoard.printBoard();
             if (gameController.hasWin(chessBoard) == 'b'){
                 gameView.showWinner('b');
             }

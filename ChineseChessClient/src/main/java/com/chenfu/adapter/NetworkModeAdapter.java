@@ -1,5 +1,6 @@
 package com.chenfu.adapter;
 
+import com.chenfu.netty.Client;
 import com.chenfu.view.GameView;
 import com.chenfu.pojo.GameStatusEnum;
 import com.chenfu.inform.InformationBoard;

@@ -2,9 +2,8 @@ package com.chenfu.alogrithm;
 
 
 import com.chenfu.DefaultSet;
-import com.chenfu.chess.ChessBoard;
-import com.chenfu.chess.ChessPiece;
-import com.chenfu.chess.Rules;
+import com.chenfu.pojo.ChessBoard;
+import com.chenfu.pojo.ChessPiece;
 import com.chenfu.control.GameController;
 
 import java.util.ArrayList;

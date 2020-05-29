@@ -1,6 +1,6 @@
 package com.chenfu.listener;
 
-import com.chenfu.chess.ChessBoard;
+import com.chenfu.pojo.ChessBoard;
 import com.chenfu.inform.InformationBoard;
 import com.chenfu.netty.Client;
 import com.chenfu.pojo.DataContent;

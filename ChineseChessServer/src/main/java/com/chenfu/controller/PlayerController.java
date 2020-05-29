@@ -18,13 +18,14 @@ public class PlayerController {
     private PlayerService playerService;
 
     @RequestMapping("/showOnline")
-    private Set<Player> getOnlinePlayers() {
+    private Set<String> getOnlinePlayers() {
         return playerService.getOnlinePlayers();
     }
 
     @RequestMapping("/initNoMatchPlayer")
-    private void clearOnlinePlayers(){
+    @ResponseBody
+    private String clearOnlinePlayers(){
         CounterpartManager.initNoMatchPlayer();
+        return "init NoMatchPlayer success";
     }
-
 }

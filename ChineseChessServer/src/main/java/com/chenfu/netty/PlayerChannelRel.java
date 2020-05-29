@@ -8,29 +8,29 @@ import java.util.Map;
 import java.util.Set;
 public class PlayerChannelRel {
 
-    private final static Map<Player,Channel> playerManager = Maps.newConcurrentMap();
+    private final static Map<String,Channel> playerManager = Maps.newConcurrentMap();
 
-    public static Channel getChannel(Player player) {
-        return playerManager.get(player);
+    public static Channel getChannel(String username) {
+        return playerManager.get(username);
     }
 
-    public static void put(Player player, Channel channel) {
-        playerManager.put(player, channel);
+    public static void put(String username, Channel channel) {
+        playerManager.put(username, channel);
     }
 
     public static boolean isLogin(Player player){
         return playerManager.containsKey(player);
     }
 
-    public static Set<Player> getOnlinePlayers(){
+    public static Set<String> getOnlinePlayers(){
         return playerManager.keySet();
     }
 
-    public static Player removeByChannel(Channel channel){
-        for (Map.Entry<Player,Channel> entry: playerManager.entrySet()) {
+    public static String removeByChannel(Channel channel){
+        for (Map.Entry<String,Channel> entry: playerManager.entrySet()) {
             if (entry.getValue() == channel) {
-                Player player = entry.getKey();
-                playerManager.remove(player);
+                String username = entry.getKey();
+                playerManager.remove(username);
                 return entry.getKey();
             }
         }

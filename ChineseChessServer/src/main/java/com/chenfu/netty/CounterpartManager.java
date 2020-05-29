@@ -1,7 +1,12 @@
 package com.chenfu.netty;
 
 import com.chenfu.pojo.Player;
+import com.chenfu.service.PlayerService;
+import com.chenfu.utils.SpringUtils;
 import com.google.common.collect.Maps;
+import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -25,9 +30,13 @@ public class CounterpartManager {
     }
 
     public static void initNoMatchPlayer(){
+        PlayerService playerService = SpringUtils.getBean(PlayerService.class);
         counterpartManager.clear();
-        Set<Player> onlinePlayers = PlayerChannelRel.getOnlinePlayers();
-        noMatchPlayer.addAll(onlinePlayers);
+        Set<String> onlinePlayers = PlayerChannelRel.getOnlinePlayers();
+        for(String username : onlinePlayers){
+            Player player = playerService.getPlayerByUsername(username);
+            noMatchPlayer.add(player);
+        }
     }
 
 

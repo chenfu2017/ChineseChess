@@ -25,6 +25,11 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public Player getPlayerByUsername(String username) {
+        return playerMapper.selectByPrimaryKey(username);
+    }
+
+    @Override
     public JSONResult login(String username, String password) {
         if(username==null ||password==null ||username.equals("")||password.equals("")){
             return JSONResult.errorMsg("name or password can not be empty.");
@@ -54,7 +59,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Set<Player> getOnlinePlayers() {
+    public Set<String> getOnlinePlayers() {
         return PlayerChannelRel.getOnlinePlayers();
     }
 }

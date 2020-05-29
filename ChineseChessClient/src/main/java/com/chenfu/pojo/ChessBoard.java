@@ -1,6 +1,4 @@
-package com.chenfu.chess;
-
-import com.chenfu.utils.AudioPlayer;
+package com.chenfu.pojo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -118,7 +116,6 @@ public class ChessBoard {
             int[] inversePosition= {BOARD_HEIGHT-1-position[0],BOARD_WIDTH-1-position[1]};
             chessPiece.position = inversePosition;
             update(chessPiece);
-            System.out.println(stringPieceEntry.getKey() + ": " + chessPiece.position[1] + ','+ chessPiece.position[0]);
         }
     }
 

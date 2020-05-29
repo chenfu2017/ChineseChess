@@ -1,8 +1,9 @@
 package com.chenfu.adapter;
 
-import com.chenfu.chess.ChessBoard;
-import com.chenfu.chess.Rules;
+import com.chenfu.pojo.ChessBoard;
+import com.chenfu.alogrithm.Rules;
 import com.chenfu.control.GameController;
+import com.chenfu.pojo.GameStatusEnum;
 import com.chenfu.utils.AudioPlayer;
 import com.chenfu.view.GameView;
 import javax.swing.*;
@@ -29,17 +30,22 @@ public class PieceOnClickListener extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        boolean send = false;
+        if(gameView.status == GameStatusEnum.NETWORK_START.status){
+            send = true;
+        }
         int[] pos = chessBoard.stringChessPieceMap.get(key).position;
-        if (gameView.selectedPieceKey != null && key.charAt(0) != chessBoard.player) {
-            int[] selectedPiecePos = chessBoard.stringChessPieceMap.get(gameView.selectedPieceKey).position;
-            for (int[] each : Objects.requireNonNull(Rules.getNextMove(gameView.selectedPieceKey, selectedPiecePos, chessBoard))) {
+        String pieceKey = gameView.selectedPieceKey;
+        if (pieceKey != null && key.charAt(0) != chessBoard.player) {
+            int[] selectedPiecePos = chessBoard.stringChessPieceMap.get(pieceKey).position;
+            for (int[] each : Objects.requireNonNull(Rules.getNextMove(pieceKey, selectedPiecePos, chessBoard))) {
                 if (Arrays.equals(each, pos)) {
                     AudioPlayer audioPlayer = new AudioPlayer("eat.wav", false);
                     audioPlayer.play();
                     JLabel jLabel = gameView.stringJLabelMap.get(key);
                     jLabel.setVisible(false);
-                    gameController.moveChess(gameView.selectedPieceKey, pos, chessBoard);
-                    gameView.movePieceFromModel(gameView.selectedPieceKey, pos);
+                    gameView.movePieceFromModel(pieceKey, pos,send);
+                    System.out.println("Piece{ PieceKey:" + pieceKey + " src:" + Arrays.toString(selectedPiecePos) + " des:" + Arrays.toString(pos)+"}");
                     break;
                 }
             }

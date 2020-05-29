@@ -1,8 +1,6 @@
 package com.chenfu.netty;
 
-import com.chenfu.pojo.DataContent;
-import com.chenfu.pojo.GameStatusEnum;
-import com.chenfu.pojo.Player;
+import com.chenfu.pojo.*;
 import com.chenfu.view.GameView;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -17,11 +15,13 @@ public class DataContentHandler extends SimpleChannelInboundHandler<DataContent>
     }
 
 
-/*   INIT(1, "初始状态"),
-    AI_NO_START(2, "人机模式就绪"),
-    AI_START(3, "人机已开始状态"),
-    NETWORK_MODE(4,"网络模式就绪"),
-    NETWORK_START(5, "网络匹配成功");*/
+/*    LOGIN(1, "用户登录"),
+    CHATMSG(2,"聊天消息"),
+    WITHDRAW(3,"悔棋"),
+    ASKDRAW(4,"求和"),
+    GIVEUP(5,"认输"),
+    NEWGAME(6,"新游戏"),
+    PIECELPOS(7,"棋子信息");*/
 
 
     @Override
@@ -30,7 +30,7 @@ public class DataContentHandler extends SimpleChannelInboundHandler<DataContent>
             return;
         int action = dataContent.getAction();
         switch (action){
-            case 5:
+            case 6:
                 Player competitor =(Player) dataContent.getObject();
                 gameView.setCompetitor(competitor);
                 gameView.status = GameStatusEnum.NETWORK_START.status;
@@ -39,6 +39,11 @@ public class DataContentHandler extends SimpleChannelInboundHandler<DataContent>
                 gameView.newGame(c);
                 gameView.showPlayer(c);
                 gameView.repaint();
+                break;
+            case 7:
+                PieceMsg pieceMsg =(PieceMsg) dataContent.getObject();
+                System.out.println(pieceMsg);
+                gameView.movePieceFromModel(pieceMsg.getKey(),pieceMsg.getDesPos(),false);
         }
     }
 }

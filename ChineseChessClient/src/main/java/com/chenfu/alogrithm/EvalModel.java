@@ -1,7 +1,7 @@
 package com.chenfu.alogrithm;
 
-import com.chenfu.chess.ChessBoard;
-import com.chenfu.chess.ChessPiece;
+import com.chenfu.pojo.ChessBoard;
+import com.chenfu.pojo.ChessPiece;
 
 import java.util.Map;
 

@@ -32,6 +32,7 @@ public class AImodeThread implements Runnable{
             }
             if (gameController.hasWin(chessBoard) == 'r'){
                 gameView.showWinner('r');
+                break;
             }
             gameView.showPlayer('b');
             int[]pos= gameController.responseMoveChess(chessBoard, gameView);
@@ -40,6 +41,7 @@ public class AImodeThread implements Runnable{
             gameView.getStepTimer().reStart();
             if (gameController.hasWin(chessBoard) == 'b'){
                 gameView.showWinner('b');
+                break;
             }
         }
     }

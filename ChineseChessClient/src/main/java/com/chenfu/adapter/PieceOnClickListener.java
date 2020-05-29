@@ -47,7 +47,7 @@ public class PieceOnClickListener extends MouseAdapter {
                     if(!send){
                         chessBoard.player = (chessBoard.player == 'r') ? 'b' : 'r';
                     }
-                    System.out.println("Piece{ PieceKey:" + pieceKey + " src:" + Arrays.toString(selectedPiecePos) + " des:" + Arrays.toString(pos)+"}");
+//                    System.out.println("Piece{ PieceKey:" + pieceKey + " src:" + Arrays.toString(selectedPiecePos) + " des:" + Arrays.toString(pos)+"}");
                     break;
                 }
             }

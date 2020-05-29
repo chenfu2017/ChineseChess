@@ -44,7 +44,7 @@ public class BoardClickListener extends MouseAdapter {
                         gameView.getStepTimer().reStart();
                         gameView.movePieceFromModel(pieceKey, pos,false);
                         chessBoard.player = (chessBoard.player == 'r') ? 'b' : 'r';
-                        System.out.println("ChessBoard{ PieceKey:" + pieceKey + " src:" + Arrays.toString(selectedPiecePos) + " des:" + Arrays.toString(pos)+"}");
+//                        System.out.println("ChessBoard{ PieceKey:" + pieceKey + " src:" + Arrays.toString(selectedPiecePos) + " des:" + Arrays.toString(pos)+"}");
                         break;
                     }
                 }

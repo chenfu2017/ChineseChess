@@ -9,6 +9,7 @@ import com.chenfu.pojo.*;
 import com.chenfu.control.GameController;
 import com.chenfu.listener.AskdrawLister;
 import com.chenfu.listener.NewGameLister;
+import com.chenfu.timer.JudgeTimer;
 import com.chenfu.timer.StepTimer;
 import com.chenfu.timer.TotalTimer;
 import com.chenfu.utils.AudioPlayer;
@@ -33,6 +34,7 @@ public class GameView extends JFrame {
     private final AudioPlayer audioPlayer;
     private final StepTimer stepTimer;
     private final TotalTimer totalTimer;
+    private final JudgeTimer judgeTimer;
     private JLabel kuangLabel;
     private Player player;
     private Player competitor;
@@ -196,6 +198,8 @@ public class GameView extends JFrame {
         jPanel.add(timerLabel);
         stepTimer = new StepTimer(timerLabel);
         this.setVisible(true);
+
+        judgeTimer = new JudgeTimer(this,chessBoard,gameController);
     }
 
     public void newGame(char c) {
@@ -210,8 +214,11 @@ public class GameView extends JFrame {
             jLabel.setLocation(realpos[0], realpos[1]);
             jLabel.setVisible(true);
         }
-        getStepTimer().start();
-        getTotalTimer().start();
+        stepTimer.start();
+        totalTimer.start();
+        if(status == GameStatusEnum.NETWORK_START.status){
+            judgeTimer.start();
+        }
         setSquareLocation(-5, -5);
         selectedPieceKey = null;
     }
@@ -275,16 +282,19 @@ public class GameView extends JFrame {
         jLabel.setIcon(imageIcon);
     }
 
-    public void showWinner(char player) {
+    public boolean showWinner(char player) {
         if (player == 'r') {
             AudioPlayer audioPlayer = new AudioPlayer("gamewin.wav", false);
             audioPlayer.play();
             JOptionPane.showMessageDialog(this, "红方获得胜利！", "游戏信息", JOptionPane.INFORMATION_MESSAGE);
-        } else {
+            return true;
+        } else if(player == 'b'){
             AudioPlayer audioPlayer = new AudioPlayer("gamelose.wav", false);
             audioPlayer.play();
             JOptionPane.showMessageDialog(this, "黑方获得胜利", "游戏信息", JOptionPane.INFORMATION_MESSAGE);
+            return true;
         }
+        return false;
     }
 
     public StepTimer getStepTimer() {

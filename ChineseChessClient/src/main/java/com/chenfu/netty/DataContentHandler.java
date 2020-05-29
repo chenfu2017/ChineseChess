@@ -44,6 +44,7 @@ public class DataContentHandler extends SimpleChannelInboundHandler<DataContent>
                 PieceMsg pieceMsg =(PieceMsg) dataContent.getObject();
                 System.out.println(pieceMsg);
                 gameView.movePieceFromModel(pieceMsg.getKey(),pieceMsg.getDesPos(),false);
+                gameView.getChessBoard().wait = false;
         }
     }
 }

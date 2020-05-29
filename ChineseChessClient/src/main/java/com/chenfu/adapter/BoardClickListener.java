@@ -27,6 +27,9 @@ public class BoardClickListener extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if(chessBoard.wait){
+            return;
+        }
         if(gameView.status == GameStatusEnum.AI_START.status){
             String pieceKey = gameView.selectedPieceKey;
             if (pieceKey != null) {
@@ -40,6 +43,7 @@ public class BoardClickListener extends MouseAdapter {
                         gameView.setSquareLocation(pos);
                         gameView.getStepTimer().reStart();
                         gameView.movePieceFromModel(pieceKey, pos,false);
+                        chessBoard.player = (chessBoard.player == 'r') ? 'b' : 'r';
                         System.out.println("ChessBoard{ PieceKey:" + pieceKey + " src:" + Arrays.toString(selectedPiecePos) + " des:" + Arrays.toString(pos)+"}");
                         break;
                     }

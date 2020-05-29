@@ -32,7 +32,6 @@ public class GameController {
 
 
     public char hasWin(ChessBoard chessBoard) {
-
         boolean isRedWin = chessBoard.stringChessPieceMap.get("bb0") == null;
         boolean isBlackWin = chessBoard.stringChessPieceMap.get("rb0") == null;
         if (isRedWin) return 'r';

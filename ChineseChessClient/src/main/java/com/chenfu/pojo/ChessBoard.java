@@ -10,6 +10,7 @@ public class ChessBoard {
     public Map<String, ChessPiece> stringChessPieceMap;
     public char player;
     public boolean inverse = false;
+    public boolean wait;
 
     public ChessBoard(char c) {
         initChessBoard(c);
@@ -52,8 +53,10 @@ public class ChessBoard {
         stringChessPieceMap.put("rz3", new ChessPiece("rz3", new int[]{6, 6}));
         stringChessPieceMap.put("rz4", new ChessPiece("rz4", new int[]{6, 8}));
         if(c=='r'){
+            wait = false;
             updateAll(stringChessPieceMap);
         }else {
+            wait = true;
             inverse = true;
             inverseBoard();
         }
@@ -99,7 +102,7 @@ public class ChessBoard {
         chessPieceArray[origPos[0]][origPos[1]] = null;
         chessPieceArray[newPos[0]][newPos[1]] = orig;
         orig.position = newPos;
-        player = (player == 'r') ? 'b' : 'r';
+//        player = (player == 'r') ? 'b' : 'r';
         return inNewPos;
     }
 

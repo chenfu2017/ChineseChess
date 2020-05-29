@@ -168,7 +168,7 @@ public class GameView extends JFrame {
             JLabel pieceLabel = new JLabel(imageIcon);
             pieceLabel.setLocation(realpos[0], realpos[1]);
             pieceLabel.setSize(DefaultSet.pieceSize, DefaultSet.pieceSize);
-            pieceLabel.addMouseListener(new PieceOnClickListener(this, gameController, chessBoard, jLayeredPane, key));
+            pieceLabel.addMouseListener(new PieceOnClickListener(this, chessBoard, key));
             pieceLabel.setVisible(false);
             stringJLabelMap.put(stringPieceEntry.getKey(), pieceLabel);
             jLayeredPane.add(pieceLabel, 0);
@@ -234,6 +234,7 @@ public class GameView extends JFrame {
             DataContent dataContent = new DataContent(pieceMsg);
             dataContent.setAction(MsgActionEnum.PIECELPOS.type);
             channel.writeAndFlush(dataContent);
+            chessBoard.wait = true;
         }
     }
 
@@ -329,5 +330,9 @@ public class GameView extends JFrame {
 
     public JLabel getLoginMenu() {
         return loginMenu;
+    }
+
+    public ChessBoard getChessBoard() {
+        return chessBoard;
     }
 }

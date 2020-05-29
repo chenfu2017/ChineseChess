@@ -15,21 +15,20 @@ import java.util.Objects;
 public class PieceOnClickListener extends MouseAdapter {
 
     private GameView gameView;
-    private GameController gameController;
     private ChessBoard chessBoard;
-    private JLayeredPane jLayeredPane;
     private String key;
 
-    public PieceOnClickListener(GameView gameView, GameController gameController, ChessBoard chessBoard, JLayeredPane jLayeredPane, String key) {
+    public PieceOnClickListener(GameView gameView,ChessBoard chessBoard,String key) {
         this.gameView = gameView;
-        this.gameController = gameController;
         this.chessBoard = chessBoard;
-        this.jLayeredPane = jLayeredPane;
         this.key = key;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if(chessBoard.wait){
+            return;
+        }
         boolean send = false;
         if(gameView.status == GameStatusEnum.NETWORK_START.status){
             send = true;
@@ -45,6 +44,9 @@ public class PieceOnClickListener extends MouseAdapter {
                     JLabel jLabel = gameView.stringJLabelMap.get(key);
                     jLabel.setVisible(false);
                     gameView.movePieceFromModel(pieceKey, pos,send);
+                    if(!send){
+                        chessBoard.player = (chessBoard.player == 'r') ? 'b' : 'r';
+                    }
                     System.out.println("Piece{ PieceKey:" + pieceKey + " src:" + Arrays.toString(selectedPiecePos) + " des:" + Arrays.toString(pos)+"}");
                     break;
                 }

@@ -12,19 +12,19 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AskdrawListener implements ActionListener {
+public class GaveUpListener implements ActionListener {
 
-    /*    LOGIN(1, "用户登录"),
-    CHATMSG(2,"聊天消息"),
-    WITHDRAW(3,"悔棋"),
-    ASKDRAW(4,"求和"),
-    GIVEUP(5,"认输"),
-    NEWGAME(6,"新游戏"),
-    PIECELPOS(7,"棋子信息");*/
+        /*    LOGIN(1, "用户登录"),
+              CHATMSG(2,"聊天消息"),
+              WITHDRAW(3,"悔棋"),
+              ASKDRAW(4,"求和"),
+              GIVEUP(5,"认输"),
+              NEWGAME(6,"新游戏"),
+              PIECELPOS(7,"棋子信息");*/
 
     private GameView gameView;
 
-    public AskdrawListener(GameView gameView) {
+    public GaveUpListener(GameView gameView) {
         this.gameView = gameView;
     }
 
@@ -34,23 +34,20 @@ public class AskdrawListener implements ActionListener {
             InformationBoard.getInstance().addLog("还未轮到您!");
             return;
         }
-        if (gameView.status == GameStatusEnum.AI_START.status) {
-            JOptionPane.showMessageDialog(gameView, "电脑拒绝了您的求和请求！");
-        } else if (gameView.status == GameStatusEnum.NETWORK_START.status) {
-            int i = JOptionPane.showConfirmDialog(gameView, "您确定发出求和请求吗？", "系统信息", JOptionPane.YES_NO_OPTION);
-            if(i == JOptionPane.YES_OPTION){
+        int i = JOptionPane.showConfirmDialog(gameView, "您确定认输吗？", "系统信息", JOptionPane.YES_NO_OPTION);
+        if(i == JOptionPane.YES_OPTION){
+            if(gameView.status == GameStatusEnum.AI_START.status){
+                gameView.lose();
+            }else if(gameView.status == GameStatusEnum.NETWORK_START.status){
                 Client instance = Client.getInstance();
                 Channel channel = instance.getChannel();
                 Player competitor = gameView.getCompetitor();
                 competitor.setPassword("ASK");
                 DataContent dataContent = new DataContent(competitor);
-                dataContent.setAction(4);
+                dataContent.setAction(5);
                 channel.writeAndFlush(dataContent);
+                gameView.lose();
             }
-        } else {
-            gameView.getInformationBoard().addLog("游戏未开始！");
         }
-
     }
-
 }

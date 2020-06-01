@@ -55,8 +55,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<DataContent> {
         int action = dataContent.getAction();
         Object object = dataContent.getObject();
         Player player = null;
+        Player competitor = null;
         Channel channel = null;
         JSONResult jsonResult = null;
+        String username = null;
         if (object instanceof Player) {
             player = (Player) object;
         }
@@ -77,8 +79,28 @@ public class ServerHandler extends SimpleChannelInboundHandler<DataContent> {
                 channel = PlayerChannelRel.getChannel(chatMsg.getUsername());
                 channel.writeAndFlush(dataContent);
                 break;
+            case 3:
+                break;
+            case 4:
+                username = player.getUsername();
+                if(player.getPassword().equals("AGREE")){
+                    competitor = CounterpartManager.getCompetitor(player);
+                    CounterpartManager.addNoMatchPlayer(competitor);
+                    CounterpartManager.addNoMatchPlayer(player);
+                }
+                channel = PlayerChannelRel.getChannel(username);
+                channel.writeAndFlush(dataContent);
+                break;
+            case 5:
+                competitor = CounterpartManager.getCompetitor(player);
+                CounterpartManager.addNoMatchPlayer(competitor);
+                CounterpartManager.addNoMatchPlayer(player);
+                username = player.getUsername();
+                channel = PlayerChannelRel.getChannel(username);
+                channel.writeAndFlush(dataContent);
+                break;
             case 6:
-                Player competitor = CounterpartManager.match(player);
+                competitor = CounterpartManager.match(player);
                 if (competitor == null) {
                     jsonResult = new JSONResult();
                     jsonResult.setMsg("当前在线人数不足！");
@@ -96,7 +118,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<DataContent> {
                     dataContent.setAction(MsgActionEnum.NEWGAME.type);
                     dataContent.setObject(competitor);
                     currentChannel.writeAndFlush(dataContent);
-
                     channel = PlayerChannelRel.getChannel(competitor.getUsername());
                     dataContent.setObject(player);
                     channel.writeAndFlush(dataContent);

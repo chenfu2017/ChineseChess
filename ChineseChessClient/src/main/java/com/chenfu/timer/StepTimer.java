@@ -30,7 +30,7 @@ public class StepTimer {
             public void run() {
                 DecimalFormat decimalFormat = new DecimalFormat("00");
                 long midTime =stepTime-(System.currentTimeMillis() - oldTime)/1000;
-                if(midTime<0){
+                if(midTime<=0){
                     gameView.showWinner(gameView.getCompetitor().getPassword().charAt(0));
                     cancel();
                 }

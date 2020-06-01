@@ -102,7 +102,6 @@ public class ChessBoard {
         chessPieceArray[origPos[0]][origPos[1]] = null;
         chessPieceArray[newPos[0]][newPos[1]] = orig;
         orig.position = newPos;
-//        player = (player == 'r') ? 'b' : 'r';
         return inNewPos;
     }
 

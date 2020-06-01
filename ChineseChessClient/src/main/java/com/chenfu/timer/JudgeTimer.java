@@ -12,8 +12,6 @@ public class JudgeTimer {
     private ChessBoard chessBoard;
     private GameController gameController;
     private Timer timer;
-    private StepTimer stepTimer;
-    private TotalTimer totalTimer;
 
 
     public JudgeTimer(GameView gameView, ChessBoard chessBoard, GameController gameController) {
@@ -27,18 +25,17 @@ public class JudgeTimer {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                char c = gameView.getCompetitor().getPassword().charAt(0);
-                if(chessBoard.inverse){
+                if(!chessBoard.inverse){
                     if(chessBoard.wait){
-                        gameView.showPlayer(c);
+                        gameView.showPlayer('b');
                     }else {
-                        gameView.showPlayer(c=='r'?'b':'r');
+                        gameView.showPlayer('r');
                     }
                 }else {
                     if(!chessBoard.wait){
-                        gameView.showPlayer(c);
+                        gameView.showPlayer('b');
                     }else {
-                        gameView.showPlayer(c=='r'?'b':'r');
+                        gameView.showPlayer('r');
                     }
                 }
                 boolean isover = gameView.showWinner(gameController.hasWin(chessBoard));

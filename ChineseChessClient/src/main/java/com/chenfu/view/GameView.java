@@ -4,6 +4,7 @@ import com.chenfu.DefaultSet;
 import com.chenfu.components.InformationBoard;
 import com.chenfu.adapter.*;
 import com.chenfu.components.DiyButton;
+import com.chenfu.listener.GaveUpListener;
 import com.chenfu.listener.SendListener;
 import com.chenfu.netty.Client;
 import com.chenfu.pojo.*;
@@ -106,6 +107,7 @@ public class GameView extends JFrame {
         jPanel.add(diyButton3);
 
         DiyButton diyButton4 = new DiyButton("认输", DefaultSet.buttonX + DefaultSet.buttonP * 3, DefaultSet.buttonY, "button.png");
+        diyButton4.addActionListener(new GaveUpListener(this));
         jPanel.add(diyButton4);
 
 
@@ -190,6 +192,7 @@ public class GameView extends JFrame {
         ImageIcon kuangIcon = ResourceUtils.getImageIcon("kuang.png");
         kuangIcon.setImage(kuangIcon.getImage().getScaledInstance(DefaultSet.pieceSize, DefaultSet.pieceSize, Image.SCALE_SMOOTH)); //调整图像的分辨率以适应容器
         kuangLabel = new JLabel(kuangIcon);
+        kuangLabel.setLocation(-100,-100);
         kuangLabel.setSize(DefaultSet.pieceSize, DefaultSet.pieceSize);
         jLayeredPane.add(kuangLabel, 0);
 
@@ -226,9 +229,6 @@ public class GameView extends JFrame {
         }
         stepTimer.start();
         totalTimer.start();
-        if (status == GameStatusEnum.NETWORK_START.status) {
-            judgeTimer.start();
-        }
         setSquareLocation(-5, -5);
         selectedPieceKey = null;
     }
@@ -292,27 +292,62 @@ public class GameView extends JFrame {
         jLabel.setIcon(imageIcon);
     }
 
+    public void win(){
+        if(!chessBoard.inverse){
+            showWinner('r');
+        }else {
+            showWinner('b');
+        }
+    }
+
+    public void lose(){
+        if(!chessBoard.inverse){
+            showWinner('b');
+        }else {
+            showWinner('r');
+        }
+    }
+
     public boolean showWinner(char player) {
+        AudioPlayer gameWinPlayer = new AudioPlayer("gamewin.wav", false);
+        AudioPlayer gamelosePlayer = new AudioPlayer("gamelose.wav", false);
         if (player == 'r') {
-            AudioPlayer audioPlayer = new AudioPlayer("gamewin.wav", false);
-            audioPlayer.play();
-            getTotalTimer().stop();
-            getStepTimer().stop();
+            if(!chessBoard.inverse){
+                gameWinPlayer.play();
+            }else {
+                gamelosePlayer.play();
+            }
+            totalTimer.stop();
+            stepTimer.stop();
             JOptionPane.showMessageDialog(this, "红方获得胜利！", "游戏信息", JOptionPane.INFORMATION_MESSAGE);
             return true;
         } else if (player == 'b') {
-            getTotalTimer().stop();
-            getStepTimer().stop();
-            AudioPlayer audioPlayer = new AudioPlayer("gamelose.wav", false);
-            audioPlayer.play();
-            JOptionPane.showMessageDialog(this, "黑方获得胜利", "游戏信息", JOptionPane.INFORMATION_MESSAGE);
+            if(chessBoard.inverse){
+                gameWinPlayer.play();
+            }else {
+                gamelosePlayer.play();
+            }
+            totalTimer.stop();
+            stepTimer.stop();
+            JOptionPane.showMessageDialog(this, "黑方获得胜利!", "游戏信息", JOptionPane.INFORMATION_MESSAGE);
             return true;
+        }else if(player == 'p'){
+            judgeTimer.stop();
+            totalTimer.stop();
+            stepTimer.stop();
+            gamelosePlayer.play();
+            JOptionPane.showMessageDialog(this, "双方协商和棋!", "游戏信息", JOptionPane.INFORMATION_MESSAGE);
+
         }
         return false;
     }
 
     public StepTimer getStepTimer() {
         return stepTimer;
+    }
+
+    public JudgeTimer getJudgeTimer() {
+        return judgeTimer;
     }
 
     public InformationBoard getInformationBoard() {

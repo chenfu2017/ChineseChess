@@ -5,6 +5,7 @@ import com.chenfu.components.InformationBoard;
 import com.chenfu.netty.Client;
 import com.chenfu.pojo.DataContent;
 import com.chenfu.pojo.MsgActionEnum;
+import com.chenfu.pojo.Player;
 import com.chenfu.view.GameView;
 
 import java.awt.event.ActionEvent;

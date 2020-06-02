@@ -15,7 +15,6 @@ import com.chenfu.utils.AudioPlayer;
 import com.chenfu.utils.JsonUtils;
 import com.chenfu.utils.ResourceUtils;
 import io.netty.channel.Channel;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -213,6 +212,7 @@ public class GameView extends JFrame {
         this.setVisible(true);
 
         judgeTimer = new JudgeTimer(this, chessBoard, gameController);
+        audioPlayer.play();
     }
 
     public void newGame(char c) {

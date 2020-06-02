@@ -1,11 +1,10 @@
 package com.chenfu.listener;
 
-import com.chenfu.pojo.ChessBoard;
+import com.chenfu.alogrithm.AImodeThread;
+import com.chenfu.control.GameController;
+import com.chenfu.pojo.*;
 import com.chenfu.components.InformationBoard;
 import com.chenfu.netty.Client;
-import com.chenfu.pojo.DataContent;
-import com.chenfu.pojo.MsgActionEnum;
-import com.chenfu.pojo.Player;
 import com.chenfu.view.GameView;
 
 import java.awt.event.ActionEvent;
@@ -15,18 +14,19 @@ public class NewGameListener implements ActionListener {
 
     private GameView gameView;
     private InformationBoard informationBoard;
+    private GameController gameController;
 
-    public NewGameListener(GameView gameView,InformationBoard informationBoard) {
+    public NewGameListener(GameView gameView, InformationBoard informationBoard, GameController gameController) {
         this.gameView = gameView;
         this.informationBoard = informationBoard;
+        this.gameController = gameController;
     }
 
-
-/*    INIT(1, "初始状态"),
-    AI_NO_START(2, "人机模式就绪"),
-    AI_START(3, "人机已开始状态"),
-    NETWORK_MODE(4,"网络模式就绪"),
-    NETWORK_START(5, "网络匹配成功");*/
+    /*    INIT(1, "初始状态"),
+        AI_NO_START(2, "人机模式就绪"),
+        AI_START(3, "人机已开始状态"),
+        NETWORK_MODE(4,"网络模式就绪"),
+        NETWORK_START(5, "网络匹配成功");*/
     @Override
     public void actionPerformed(ActionEvent e) {
         int status = gameView.status;
@@ -35,7 +35,9 @@ public class NewGameListener implements ActionListener {
             case 2:
             case 3:
                 gameView.newGame('r');
-                informationBoard.addLog("重新开始！");break;
+                informationBoard.addLog("重新开始！");
+                gameView.status = GameStatusEnum.AI_START.status;
+                break;
             case 4:
                 informationBoard.addLog("匹配中,请稍后...");
                 Client instance = Client.getInstance();

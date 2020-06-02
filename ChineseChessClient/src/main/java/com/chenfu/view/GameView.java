@@ -40,6 +40,7 @@ public class GameView extends JFrame {
     private Player competitor;
     private JLabel loginMenu;
     public int status;
+    public boolean flag;
     private List<String> boardstatus = new ArrayList<>();
     /*0初始状态
     1人机开始状态
@@ -94,7 +95,7 @@ public class GameView extends JFrame {
 
         //添加按钮
         DiyButton diyButton1 = new DiyButton("新对局", DefaultSet.buttonX, DefaultSet.buttonY, "button.png");
-        diyButton1.addActionListener(new NewGameListener(this, informationBoard));
+        diyButton1.addActionListener(new NewGameListener(this, informationBoard,gameController));
         jPanel.add(diyButton1);
 
         DiyButton diyButton2 = new DiyButton("悔棋", DefaultSet.buttonX + DefaultSet.buttonP, DefaultSet.buttonY, "button.png");
@@ -375,6 +376,8 @@ public class GameView extends JFrame {
             totalTimer.stop();
             stepTimer.stop();
             JOptionPane.showMessageDialog(this, "红方获得胜利！", "游戏信息", JOptionPane.INFORMATION_MESSAGE);
+            status = GameStatusEnum.INIT.status;
+            flag = false;
             return true;
         } else if (player == 'b') {
             if(chessBoard.inverse){
@@ -385,6 +388,8 @@ public class GameView extends JFrame {
             totalTimer.stop();
             stepTimer.stop();
             JOptionPane.showMessageDialog(this, "黑方获得胜利!", "游戏信息", JOptionPane.INFORMATION_MESSAGE);
+            status = GameStatusEnum.INIT.status;
+            flag = false;
             return true;
         }else if(player == 'p'){
             judgeTimer.stop();

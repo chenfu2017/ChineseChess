@@ -3,6 +3,7 @@ package com.chenfu.alogrithm;
 import com.chenfu.DefaultSet;
 import com.chenfu.pojo.ChessBoard;
 import com.chenfu.control.GameController;
+import com.chenfu.pojo.GameStatusEnum;
 import com.chenfu.view.GameView;
 
 public class AImodeThread implements Runnable{
@@ -12,23 +13,28 @@ public class AImodeThread implements Runnable{
     private ChessBoard chessBoard;
     private GameController gameController;
 
+
+
     public AImodeThread(GameView gameView, ChessBoard chessBoard, GameController gameController) {
         this.gameView = gameView;
         this.chessBoard = chessBoard;
         this.gameController = gameController;
     }
 
-
     @Override
     public void run() {
-        while (true){
+        System.out.println("AI thread start!");
+        while (gameView.flag){
             gameView.showPlayer('r');
-            while (chessBoard.player == 'r') {
+            while (chessBoard.player == 'r' && gameView.flag) {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+            if(!gameView.flag){
+                break;
             }
             if (gameController.hasWin(chessBoard) == 'r'){
                 gameView.showWinner('r');
@@ -45,5 +51,7 @@ public class AImodeThread implements Runnable{
                 break;
             }
         }
+        gameView.status = GameStatusEnum.INIT.status;
+        System.out.println("AI thread destroy!");
     }
 }

@@ -38,6 +38,9 @@ public class GaveUpListener implements ActionListener {
         if(i == JOptionPane.YES_OPTION){
             if(gameView.status == GameStatusEnum.AI_START.status){
                 gameView.lose();
+                gameView.status = GameStatusEnum.INIT.status;
+                gameView.flag = false;
+
             }else if(gameView.status == GameStatusEnum.NETWORK_START.status){
                 Client instance = Client.getInstance();
                 Channel channel = instance.getChannel();

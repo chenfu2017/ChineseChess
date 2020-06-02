@@ -42,6 +42,7 @@ public class AIModeAdapter extends MouseAdapter {
         if(gameView.status != GameStatusEnum.NETWORK_START.status){
             gameView.status = GameStatusEnum.AI_START.status;
             gameView.getInformationBoard().addLog("AI combat mode selected!");
+            gameView.flag = true;
             new Thread(new AImodeThread(gameView,chessBoard,gameController)).start();
         }
     }

@@ -44,6 +44,7 @@ public class PlayerServiceImpl implements PlayerService {
             playerMapper.insertSelective(player);
             JSONResult jsonResult = JSONResult.ok();
             jsonResult.setMsg("regist successfully");
+            jsonResult.setData(player);
             return jsonResult;
         } else {
             String cpassword = player.getPassword();

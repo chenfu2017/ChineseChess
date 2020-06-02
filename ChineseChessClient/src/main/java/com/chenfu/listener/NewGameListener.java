@@ -14,12 +14,10 @@ import java.awt.event.ActionListener;
 public class NewGameListener implements ActionListener {
 
     private GameView gameView;
-    private ChessBoard chessBoard;
     private InformationBoard informationBoard;
 
-    public NewGameListener(GameView gameView, ChessBoard chessBoard, InformationBoard informationBoard) {
+    public NewGameListener(GameView gameView,InformationBoard informationBoard) {
         this.gameView = gameView;
-        this.chessBoard = chessBoard;
         this.informationBoard = informationBoard;
     }
 

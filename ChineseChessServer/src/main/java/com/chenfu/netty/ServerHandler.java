@@ -80,6 +80,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<DataContent> {
                 channel.writeAndFlush(dataContent);
                 break;
             case 3:
+                username = player.getUsername();
+                channel = PlayerChannelRel.getChannel(username);
+                channel.writeAndFlush(dataContent);
                 break;
             case 4:
                 username = player.getUsername();

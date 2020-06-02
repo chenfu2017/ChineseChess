@@ -34,6 +34,7 @@ public class DataContentHandler extends SimpleChannelInboundHandler<DataContent>
             return;
         Player competitor = null;
         char c = '0';
+        String password = null;
         int action = dataContent.getAction();
         switch (action){
             case 2:
@@ -42,9 +43,29 @@ public class DataContentHandler extends SimpleChannelInboundHandler<DataContent>
                 String msg = competitorUsername +"对你说:" + chatMsg.getMsg();
                 InformationBoard.getInstance().addLog(msg);
                 break;
+            case 3:
+                competitor= (Player)dataContent.getObject();
+                password = competitor.getPassword();
+                if(password.equals("ASK")){
+                    int i = JOptionPane.showConfirmDialog(gameView, "您是否同意对方的悔棋请求？", "系统信息", JOptionPane.YES_NO_OPTION);
+                    if(i == JOptionPane.YES_OPTION){
+                        Client instance = Client.getInstance();
+                        Channel channel = instance.getChannel();
+                        competitor = gameView.getCompetitor();
+                        competitor.setPassword("AGREE");
+                        dataContent.setObject(competitor);
+                        channel.writeAndFlush(dataContent);
+                        gameView.getChessBoard().wait = true;
+                        gameView.goBackOnce();
+                    }
+                }else if(password.equals("AGREE")){
+                    gameView.getChessBoard().wait = false;
+                    gameView.goBackOnce();
+                }
+                break;
             case 4:
                 competitor= (Player)dataContent.getObject();
-                String password = competitor.getPassword();
+                password = competitor.getPassword();
                 if(password.equals("ASK")){
                     int i = JOptionPane.showConfirmDialog(gameView, "您是否同意对方的求和请求？", "系统信息", JOptionPane.YES_NO_OPTION);
                     if(i == JOptionPane.YES_OPTION){
@@ -79,7 +100,7 @@ public class DataContentHandler extends SimpleChannelInboundHandler<DataContent>
                 break;
             case 7:
                 PieceMsg pieceMsg =(PieceMsg) dataContent.getObject();
-                System.out.println(pieceMsg);
+//                System.out.println(pieceMsg);
                 gameView.movePieceFromModel(pieceMsg.getKey(),pieceMsg.getDesPos(),false);
                 gameView.getChessBoard().wait = false;
                 gameView.getStepTimer().reStart();

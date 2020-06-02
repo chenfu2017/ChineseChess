@@ -36,6 +36,7 @@ public class AImodeThread implements Runnable{
             }
             gameView.showPlayer('b');
             int[]pos= gameController.responseMoveChess(chessBoard, gameView);
+            gameView.saveBoard();
             chessBoard.player = (chessBoard.player == 'r') ? 'b' : 'r';
             gameView.getKuangLabel().setLocation(DefaultSet.SX_OFFSET + pos[1] * DefaultSet.SX_COE, DefaultSet.SY_OFFSET + pos[0] * DefaultSet.SY_COE);
             gameView.getStepTimer().reStart();

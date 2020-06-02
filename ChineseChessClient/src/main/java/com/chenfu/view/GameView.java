@@ -4,25 +4,23 @@ import com.chenfu.DefaultSet;
 import com.chenfu.components.InformationBoard;
 import com.chenfu.adapter.*;
 import com.chenfu.components.DiyButton;
-import com.chenfu.listener.GaveUpListener;
-import com.chenfu.listener.SendListener;
+import com.chenfu.listener.*;
 import com.chenfu.netty.Client;
 import com.chenfu.pojo.*;
 import com.chenfu.control.GameController;
-import com.chenfu.listener.AskdrawListener;
-import com.chenfu.listener.NewGameListener;
 import com.chenfu.timer.JudgeTimer;
 import com.chenfu.timer.StepTimer;
 import com.chenfu.timer.TotalTimer;
 import com.chenfu.utils.AudioPlayer;
+import com.chenfu.utils.JsonUtils;
 import com.chenfu.utils.ResourceUtils;
 import io.netty.channel.Channel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 public class GameView extends JFrame {
     public Map<String, JLabel> stringJLabelMap = new HashMap<String, JLabel>();
@@ -42,7 +40,7 @@ public class GameView extends JFrame {
     private Player competitor;
     private JLabel loginMenu;
     public int status;
-
+    private List<String> boardstatus = new ArrayList<>();
     /*0初始状态
     1人机开始状态
     2网络未登录
@@ -96,10 +94,11 @@ public class GameView extends JFrame {
 
         //添加按钮
         DiyButton diyButton1 = new DiyButton("新对局", DefaultSet.buttonX, DefaultSet.buttonY, "button.png");
-        diyButton1.addActionListener(new NewGameListener(this, chessBoard, informationBoard));
+        diyButton1.addActionListener(new NewGameListener(this, informationBoard));
         jPanel.add(diyButton1);
 
         DiyButton diyButton2 = new DiyButton("悔棋", DefaultSet.buttonX + DefaultSet.buttonP, DefaultSet.buttonY, "button.png");
+        diyButton2.addActionListener(new WithDrawListener(this));
         jPanel.add(diyButton2);
 
         DiyButton diyButton3 = new DiyButton("求和", DefaultSet.buttonX + DefaultSet.buttonP * 2, DefaultSet.buttonY, "button.png");
@@ -162,7 +161,7 @@ public class GameView extends JFrame {
         JLabel jLabel = new JLabel(boardimage);
         jLabel.setLocation(DefaultSet.canvasPosX, DefaultSet.canvasPosY);
         jLabel.setSize(DefaultSet.canvasPosWidth, DefaultSet.canvasPosHeight);
-        jLabel.addMouseListener(new BoardClickListener(this, this.chessBoard, gameController));
+        jLabel.addMouseListener(new BoardClickListener(this, chessBoard));
         jLayeredPane.add(jLabel, 2);
 
         /* Initialize player image.*/
@@ -230,6 +229,7 @@ public class GameView extends JFrame {
         stepTimer.start();
         totalTimer.start();
         setSquareLocation(-5, -5);
+        saveBoard();
         selectedPieceKey = null;
     }
 
@@ -238,7 +238,61 @@ public class GameView extends JFrame {
         return inversePosition;
     }
 
+    public void saveBoard() {
+        ArrayList<String> shortPieces = new ArrayList<>(14);
+        for (Map.Entry<String, ChessPiece> stringPieceEntry : chessBoard.stringChessPieceMap.entrySet()) {
+            ChessPiece chessPiece = stringPieceEntry.getValue();
+            shortPieces.add(chessPiece.key+chessPiece.position[0]+chessPiece.position[1]);
+        }
+        boardstatus.add(JsonUtils.objectToJson(shortPieces));
+    }
+
+    public void loadBoard(String json){
+        List<String> shortPieces = JsonUtils.jsonToList(json, String.class);
+        Iterator<Map.Entry<String, JLabel>> iterator = stringJLabelMap.entrySet().iterator();
+        while (iterator.hasNext()){
+            JLabel value = iterator.next().getValue();
+            value.setVisible(false);
+        }
+        chessBoard.clearchessBoard();
+        for(String s:shortPieces){
+            String pieceKey = s.substring(0,3);
+            int x = s.charAt(3)-'0';
+            int y = s.charAt(4)-'0';
+            int[] position = {x,y};
+            ChessPiece chessPiece = new ChessPiece(pieceKey, position);
+            chessBoard.chessPieceArray[x][y] = chessPiece;
+            chessBoard.stringChessPieceMap.put(pieceKey,chessPiece);
+            JLabel jLabel = stringJLabelMap.get(pieceKey);
+            int[] realpos = modelToViewConverter(position);
+            jLabel.setLocation(realpos[0], realpos[1]);
+            jLabel.setVisible(true);
+        }
+    }
+
+    public void goBackOnce(){
+        int size = boardstatus.size();
+        if(size<2){
+            informationBoard.addLog("当前不能悔棋！");
+            return;
+        }
+        boardstatus.remove(size-1);
+        loadBoard(boardstatus.get(size-2));
+    }
+
+    public void goBackTwice(){
+        int size = boardstatus.size();
+        if(size<3){
+            informationBoard.addLog("当前不能悔棋！");
+            return;
+        }
+        boardstatus.remove(size-1);
+        boardstatus.remove(size-2);
+        loadBoard(boardstatus.get(size-3));
+    }
+
     public void movePieceFromModel(String pieceKey, int[] to, boolean send) {
+        saveBoard();
         chessBoard.updatePiece(pieceKey, to);
         JLabel pieceObject = stringJLabelMap.get(pieceKey);
         int[] despos = modelToViewConverter(to);
@@ -253,6 +307,7 @@ public class GameView extends JFrame {
             channel.writeAndFlush(dataContent);
             chessBoard.wait = true;
         }
+
     }
 
     public void movePieceFromAI(String pieceKey, int[] to) {
@@ -393,5 +448,9 @@ public class GameView extends JFrame {
 
     public ChessBoard getChessBoard() {
         return chessBoard;
+    }
+
+    public List<String> getBoardstatus() {
+        return boardstatus;
     }
 }

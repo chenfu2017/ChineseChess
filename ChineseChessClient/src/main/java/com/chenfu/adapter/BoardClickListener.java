@@ -16,12 +16,11 @@ public class BoardClickListener extends MouseAdapter {
 
     private GameView gameView;
     private ChessBoard chessBoard;
-    private GameController gameController;
 
-    public BoardClickListener(GameView gameView, ChessBoard chessBoard, GameController gameController) {
+
+    public BoardClickListener(GameView gameView, ChessBoard chessBoard) {
         this.gameView = gameView;
         this.chessBoard = chessBoard;
-        this.gameController = gameController;
     }
 
     @Override

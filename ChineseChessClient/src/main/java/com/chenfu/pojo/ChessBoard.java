@@ -1,12 +1,15 @@
 package com.chenfu.pojo;
 
+import com.chenfu.utils.JsonUtils;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChessBoard {
 
     public final int BOARD_WIDTH = 9, BOARD_HEIGHT = 10;
-    private ChessPiece[][] chessPieceArray;
+    public ChessPiece[][] chessPieceArray;
     public Map<String, ChessPiece> stringChessPieceMap;
     public char player;
     public boolean inverse = false;
@@ -16,10 +19,10 @@ public class ChessBoard {
         initChessBoard(c);
     }
 
-    public void initChessBoard(char c){
+    public void initChessBoard(char c) {
         chessPieceArray = new ChessPiece[BOARD_HEIGHT][BOARD_WIDTH];
         player = c;
-        stringChessPieceMap = new HashMap<>();
+        stringChessPieceMap = new HashMap<>(16);
         stringChessPieceMap.put("bj0", new ChessPiece("bj0", new int[]{0, 0}));
         stringChessPieceMap.put("bm0", new ChessPiece("bm0", new int[]{0, 1}));
         stringChessPieceMap.put("bx0", new ChessPiece("bx0", new int[]{0, 2}));
@@ -52,10 +55,10 @@ public class ChessBoard {
         stringChessPieceMap.put("rz2", new ChessPiece("rz2", new int[]{6, 4}));
         stringChessPieceMap.put("rz3", new ChessPiece("rz3", new int[]{6, 6}));
         stringChessPieceMap.put("rz4", new ChessPiece("rz4", new int[]{6, 8}));
-        if(c=='r'){
+        if (c == 'r') {
             wait = false;
             updateAll(stringChessPieceMap);
-        }else {
+        } else {
             wait = true;
             inverse = true;
             inverseBoard();
@@ -63,6 +66,14 @@ public class ChessBoard {
 
     }
 
+    public void clearchessBoard(){
+        for (int i = 0; i <BOARD_HEIGHT; i++) {
+            for (int j = 0; j <BOARD_WIDTH; j++) {
+                chessPieceArray[i][j]=null;
+            }
+        }
+        stringChessPieceMap.clear();
+    }
 
     public boolean isInside(int[] position) {
         return isInside(position[0], position[1]);
@@ -89,13 +100,14 @@ public class ChessBoard {
     }
 
     public void updateAll(Map<String, ChessPiece> stringChessPieceMap) {
-        for (Map.Entry<String, ChessPiece> stringPieceEntry : stringChessPieceMap.entrySet()) update(stringPieceEntry.getValue());
+        for (Map.Entry<String, ChessPiece> stringPieceEntry : stringChessPieceMap.entrySet())
+            update(stringPieceEntry.getValue());
     }
 
     public ChessPiece updatePiece(String key, int[] newPos) {
         ChessPiece orig = stringChessPieceMap.get(key);
         ChessPiece inNewPos = getPiece(newPos);
-        if (inNewPos != null){
+        if (inNewPos != null) {
             stringChessPieceMap.remove(inNewPos.key);
         }
         int[] origPos = orig.position;
@@ -111,24 +123,130 @@ public class ChessBoard {
         return true;
     }
 
-    public void inverseBoard(){
+
+    public void inverseBoard() {
         for (Map.Entry<String, ChessPiece> stringPieceEntry : stringChessPieceMap.entrySet()) {
             ChessPiece chessPiece = stringPieceEntry.getValue();
             int[] position = chessPiece.position;
-            int[] inversePosition= {BOARD_HEIGHT-1-position[0],BOARD_WIDTH-1-position[1]};
+            int[] inversePosition = {BOARD_HEIGHT - 1 - position[0], BOARD_WIDTH - 1 - position[1]};
             chessPiece.position = inversePosition;
             update(chessPiece);
         }
     }
 
-    public void printBoard() {
 
-        for (Map.Entry<String, ChessPiece> stringPieceEntry : stringChessPieceMap.entrySet()) {
-            ChessPiece chessPiece = stringPieceEntry.getValue();
-            System.out.println(stringPieceEntry.getKey() + ": " + chessPiece.position[1] + ','+ chessPiece.position[0]);
+ /*   public String saveBoard() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < BOARD_HEIGHT; i++) {
+            for (int j = 0; j < BOARD_WIDTH; j++) {
+                if (chessPieceArray[i][j] != null) {
+                    ChessPiece chessPiece = chessPieceArray[i][j];
+                    String key = chessPiece.key;
+                    switch (key) {
+                        case "bj0":
+                            stringBuilder.append(Integer.toHexString(1));
+                            break;
+                        case "bm0":
+                            stringBuilder.append(Integer.toHexString(2));
+                            break;
+                        case "bx0":
+                            stringBuilder.append(Integer.toHexString(3));
+                            break;
+                        case "bs0":
+                            stringBuilder.append(Integer.toHexString(4));
+                            break;
+                        case "bb0":
+                            stringBuilder.append(Integer.toHexString(5));
+                            break;
+                        case "bs1":
+                            stringBuilder.append(Integer.toHexString(4));
+                            break;
+                        case "bx1":
+                            stringBuilder.append(Integer.toHexString(3));
+                            break;
+                        case "bm1":
+                            stringBuilder.append(Integer.toHexString(2));
+                            break;
+                        case "bj1":
+                            stringBuilder.append(Integer.toHexString(1));
+                            break;
+                        case "bp0":
+                            stringBuilder.append(Integer.toHexString(6));
+                            break;
+                        case "bp1":
+                            stringBuilder.append(Integer.toHexString(6));
+                            break;
+                        case "bz0":
+                            stringBuilder.append(Integer.toHexString(7));
+                            break;
+                        case "bz1":
+                            stringBuilder.append(Integer.toHexString(7));
+                            break;
+                        case "bz2":
+                            stringBuilder.append(Integer.toHexString(7));
+                            break;
+                        case "bz3":
+                            stringBuilder.append(Integer.toHexString(7));
+                            break;
+                        case "bz4":
+                            stringBuilder.append(Integer.toHexString(7));
+                            break;
+                        case "rj0":
+                            stringBuilder.append(Integer.toHexString(8));
+                            break;
+                        case "rm0":
+                            stringBuilder.append(Integer.toHexString(9));
+                            break;
+                        case "rx0":
+                            stringBuilder.append(Integer.toHexString(10));
+                            break;
+                        case "rs0":
+                            stringBuilder.append(Integer.toHexString(11));
+                            break;
+                        case "rb0":
+                            stringBuilder.append(Integer.toHexString(12));
+                            break;
+                        case "rs1":
+                            stringBuilder.append(Integer.toHexString(11));
+                            break;
+                        case "rx1":
+                            stringBuilder.append(Integer.toHexString(10));
+                            break;
+                        case "rm1":
+                            stringBuilder.append(Integer.toHexString(9));
+                            break;
+                        case "rj1":
+                            stringBuilder.append(Integer.toHexString(8));
+                            break;
+                        case "rp0":
+                            stringBuilder.append(Integer.toHexString(13));
+                            break;
+                        case "rp1":
+                            stringBuilder.append(Integer.toHexString(13));
+                            break;
+                        case "rz0":
+                            stringBuilder.append(Integer.toHexString(14));
+                            break;
+                        case "rz1":
+                            stringBuilder.append(Integer.toHexString(14));
+                            break;
+                        case "rz2":
+                            stringBuilder.append(Integer.toHexString(14));
+                            break;
+                        case "rz3":
+                            stringBuilder.append(Integer.toHexString(14));
+                            break;
+                        case "rz4":
+                            stringBuilder.append(Integer.toHexString(14));
+                            break;
+                    }
+                } else {
+                    stringBuilder.append(Integer.toHexString(0));
+                }
+            }
         }
-        System.out.println();
-    }
+        return stringBuilder.toString();
+    }*/
 
     public ChessPiece getPiece(int[] pos) {
         return getPiece(pos[0], pos[1]);

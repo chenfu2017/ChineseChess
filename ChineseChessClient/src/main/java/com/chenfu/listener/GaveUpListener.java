@@ -7,7 +7,6 @@ import com.chenfu.pojo.GameStatusEnum;
 import com.chenfu.pojo.Player;
 import com.chenfu.view.GameView;
 import io.netty.channel.Channel;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

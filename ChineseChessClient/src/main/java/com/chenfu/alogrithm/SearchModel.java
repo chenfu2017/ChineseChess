@@ -31,7 +31,7 @@ public class SearchModel {
         if (chessBoard.stringChessPieceMap.size() < 4)
             DEPTH = DefaultSet.DEPTH + 4;
         System.out.println("棋子数量：" + chessBoard.stringChessPieceMap.size());
-        System.out.println("递归深度：" + DEPTH);
+        System.out.println("递归深度：" + DEPTH*2);
         long startTime = System.currentTimeMillis();
         AlphaBetaNode best = null;
         ArrayList<AlphaBetaNode> moves = generateMovesForAll(true);
